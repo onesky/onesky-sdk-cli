@@ -13,6 +13,8 @@ func SaveConfig(path string, config *OneskyConfig) {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	config.source = path
 	if err := toml.NewEncoder(f).Encode(config); err != nil {
 		fmt.Println(err)
 	}
@@ -36,6 +38,7 @@ func NewConfigFromFile(path string) *OneskyConfig {
 	if _, err := toml.DecodeFile(path, &Config); err != nil {
 		log.Println(err)
 	}
+	Config.source = path
 
 	return Config
 }
