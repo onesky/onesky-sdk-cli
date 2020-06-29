@@ -17,6 +17,8 @@ import (
 
 var onTerminate = func(code syscall.Signal) {}
 
+const API_URL = "https://management-api.onesky.app/v1"
+
 func init() {
 
 	runtime.GOMAXPROCS(runtime.NumCPU())
@@ -27,18 +29,30 @@ func init() {
 
 func main() {
 
+	///////////////////////////////////
 	// LOAD CONFIG
+	///////////////////////////////////
 	var Config *config.OneskyConfig
 	if _, confErr := os.Stat(build.CONFIG_PATH); os.IsNotExist(confErr) {
 		fmt.Println("Trying to save new config file to:", build.CONFIG_PATH)
-		Config = &config.OneskyConfig{Title: "Onesky config"}
-		config.SaveConfig(build.CONFIG_PATH, Config)
+
+		Config = &config.OneskyConfig{
+			Title: "Onesky config",
+			Api:   config.Api{Url: API_URL},
+		}
+
+		confErr = config.SaveConfig(build.CONFIG_PATH, Config)
+		if confErr != nil {
+			fmt.Println("WARNING:", confErr)
+		}
 
 	} else {
 		Config = config.NewConfigFromFile(build.CONFIG_PATH)
 	}
 
+	/////////////////////////////////
 	// CLI-INTERFACE
+	////////////////////////////////
 	fmt.Println("Build: ", time.Now().Format("20060102-1504"), runtime.GOOS, runtime.GOARCH)
 	fmt.Println("Read config:", build.CONFIG_PATH)
 
@@ -216,6 +230,11 @@ func main() {
 			&cli.StringFlag{
 				Name:     "access-token",
 				Usage:    "Set `ACCESS_TOKEN`",
+				Required: false,
+			},
+			&cli.BoolFlag{
+				Name:     "debug",
+				Usage:    "Show debug information",
 				Required: false,
 			},
 		},

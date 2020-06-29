@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func SaveConfig(path string, config *OneskyConfig) {
+func SaveConfig(path string, config *OneskyConfig) (err error) {
 	f, err := os.Create(path)
 
 	if err != nil {
@@ -21,6 +21,8 @@ func SaveConfig(path string, config *OneskyConfig) {
 	if err := f.Close(); err != nil {
 		fmt.Println(err)
 	}
+
+	return err
 }
 
 func NewConfig(config string) *OneskyConfig {
