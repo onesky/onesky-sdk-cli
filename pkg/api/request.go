@@ -57,7 +57,7 @@ func (r *Request) saveParams() {
 	if r.Header.Get("Content-Type") == TypeJson {
 		bParams, err := json.Marshal(*r.params)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("Fatal:", err)
 			os.Exit(1)
 		}
 		params = string(bParams)
