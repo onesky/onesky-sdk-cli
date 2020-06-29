@@ -24,12 +24,27 @@ func New(config *config.OneskyConfig) File {
 	}
 }
 
-func (f *file) Upload(c *cli.Context) (e error) {
+func (f *file) Upload(c *cli.Context) (err error) {
 
-	return e
+	apiClient := api.New(f.Config())
+	request, err := apiClient.NewApiRequest("POST", "/files")
+	if err == nil {
+		request.SetParam("platformId", c.String("platform-id"))
+		request.SetParam("languageId", c.String("language-id"))
+		request.SetParam("fileName", c.String("file-name"))
+		request.SetParam("content", c.String("content"))
+
+		isDebug := c.Bool("debug")
+		responseString, e := apiClient.Client().DoRequest(request, isDebug)
+		if e == nil && !isDebug {
+			fmt.Println(string(responseString))
+		}
+	}
+
+	return err
 }
 
-func (f *file) List(c *cli.Context) (e error) {
+func (f *file) List(c *cli.Context) (err error) {
 
 	apiClient := api.New(f.Config())
 	request, err := apiClient.NewApiRequest("GET", "/files")
