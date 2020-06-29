@@ -26,8 +26,13 @@ func New(config *config.OneskyConfig) Auth {
 func (a *auth) Login(c *cli.Context) (e error) {
 
 	a.Config().Credentials.Token = c.String("access-token")
-	a.Config().Update()
-	fmt.Println("New token: ", a.Config().Credentials.Token)
+
+	e = a.Config().Update()
+	if e == nil {
+		fmt.Println("New token: ", a.Config().Credentials.Token)
+	} else {
+		fmt.Println("Unable to update config: ", e.Error())
+	}
 	return e
 }
 
@@ -43,8 +48,14 @@ func (a *auth) List(c *cli.Context) (e error) {
 
 func (a *auth) Revoke(c *cli.Context) (e error) {
 	a.Config().Credentials.Token = ""
-	a.Config().Update()
-	fmt.Println("Access token was revoked")
+
+	e = a.Config().Update()
+	if e == nil {
+		fmt.Println("Access token was revoked")
+	} else {
+		fmt.Println("Unable to update config: ", e.Error())
+	}
+
 	return e
 
 }
