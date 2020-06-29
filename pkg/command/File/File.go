@@ -1,8 +1,10 @@
 package File
 
 import (
+	"OneSky-cli/pkg/api"
 	"OneSky-cli/pkg/command"
 	"OneSky-cli/pkg/config"
+	"fmt"
 	"github.com/urfave/cli"
 )
 
@@ -28,8 +30,18 @@ func (f *file) Upload(c *cli.Context) (e error) {
 }
 
 func (f *file) List(c *cli.Context) (e error) {
-	return e
 
+	apiClient := api.New(f.Config())
+	request, err := apiClient.NewApiRequest("GET", "/files")
+	if err == nil {
+		isDebug := c.Bool("debug")
+		responseString, e := apiClient.Client().DoRequest(request, isDebug)
+		if e == nil && !isDebug {
+			fmt.Println(string(responseString))
+		}
+	}
+
+	return err
 }
 
 func (f *file) Download(c *cli.Context) (e error) {
