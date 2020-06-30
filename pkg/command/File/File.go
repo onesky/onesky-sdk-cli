@@ -16,18 +16,19 @@ type File interface {
 
 type file struct {
 	command.Command
+	api api.Api
 }
 
 func New(config *config.OneskyConfig) File {
 	return &file{
-		command.New(config),
+		Command: command.New(config),
+		api:     api.New(config),
 	}
 }
 
 func (f *file) Upload(c *cli.Context) (err error) {
 
-	apiClient := api.New(f.Config())
-	request, err := apiClient.NewApiRequest("POST", "/files")
+	request, err := f.api.NewApiRequest("POST", "/files")
 	if err == nil {
 		request.SetParam("platformId", c.String("platform-id"))
 		request.SetParam("languageId", c.String("language-id"))
@@ -35,7 +36,7 @@ func (f *file) Upload(c *cli.Context) (err error) {
 		request.SetParam("content", c.String("content"))
 
 		isDebug := c.Bool("debug")
-		responseString, e := apiClient.Client().DoRequest(request, isDebug)
+		responseString, e := f.api.Client().DoRequest(request, isDebug)
 		if e == nil && !isDebug {
 			fmt.Println(string(responseString))
 		}
@@ -46,11 +47,10 @@ func (f *file) Upload(c *cli.Context) (err error) {
 
 func (f *file) List(c *cli.Context) (err error) {
 
-	apiClient := api.New(f.Config())
-	request, err := apiClient.NewApiRequest("GET", "/files")
+	request, err := f.api.NewApiRequest("GET", "/files")
 	if err == nil {
 		isDebug := c.Bool("debug")
-		responseString, e := apiClient.Client().DoRequest(request, isDebug)
+		responseString, e := f.api.Client().DoRequest(request, isDebug)
 		if e == nil && !isDebug {
 			fmt.Println(string(responseString))
 		}
@@ -60,6 +60,16 @@ func (f *file) List(c *cli.Context) (err error) {
 }
 
 func (f *file) Download(c *cli.Context) (e error) {
-	return e
 
+	path := fmt.Sprintf("/files/%s/contents", c.String("file-id"))
+	request, err := f.api.NewApiRequest("GET", path)
+	if err == nil {
+		isDebug := c.Bool("debug")
+		responseString, e := f.api.Client().DoRequest(request, isDebug)
+		if e == nil && !isDebug {
+			fmt.Println(string(responseString))
+		}
+	}
+
+	return err
 }
