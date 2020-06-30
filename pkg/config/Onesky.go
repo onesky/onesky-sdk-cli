@@ -2,7 +2,6 @@ package config
 
 import (
 	"errors"
-	"time"
 )
 
 type OneskyConfig struct {
@@ -26,5 +25,5 @@ type Credentials struct {
 
 type Api struct {
 	Url     string
-	Timeout time.Duration
+	Timeout int
 }

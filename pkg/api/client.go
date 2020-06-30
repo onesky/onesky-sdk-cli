@@ -33,7 +33,12 @@ func (c *client) DoRequest(request *Request, debug bool) (data []byte, err error
 		}
 	}
 
-	response, err := (&http.Client{Timeout: 30 * time.Second}).Do(request.Request)
+	httpClient := &http.Client{}
+	if c.config.Api.Timeout > 0 {
+		httpClient.Timeout = time.Duration(c.config.Api.Timeout) * time.Second
+	}
+
+	response, err := httpClient.Do(request.Request)
 	if err == nil {
 
 		if debug {

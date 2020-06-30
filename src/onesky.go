@@ -1,12 +1,14 @@
 package main
 
 import (
+	"OneSky-cli/pkg/command/Api"
 	"OneSky-cli/pkg/command/Auth"
 	"OneSky-cli/pkg/command/File"
 	"OneSky-cli/pkg/command/Lang"
 	"OneSky-cli/pkg/config"
 	"OneSky-cli/pkg/help"
 	"OneSky-cli/src/build"
+	"errors"
 	"fmt"
 	"github.com/urfave/cli"
 	"os"
@@ -18,6 +20,7 @@ import (
 var onTerminate = func(code syscall.Signal) {}
 
 const API_URL = "https://management-api.onesky.app/v1"
+const API_TIMEOUT = 30
 
 func init() {
 
@@ -29,33 +32,11 @@ func init() {
 
 func main() {
 
-	///////////////////////////////////
-	// LOAD CONFIG
-	///////////////////////////////////
-	var Config *config.OneskyConfig
-	if _, confErr := os.Stat(build.CONFIG_PATH); os.IsNotExist(confErr) {
-		fmt.Println("Trying to save new config file to:", build.CONFIG_PATH)
-
-		Config = &config.OneskyConfig{
-			Title: "Onesky config",
-			Api:   config.Api{Url: API_URL},
-		}
-
-		confErr = config.SaveConfig(build.CONFIG_PATH, Config)
-		if confErr != nil {
-			fmt.Println("WARNING:", confErr)
-		}
-
-	} else {
-		Config = config.NewConfigFromFile(build.CONFIG_PATH)
-	}
+	var Config = &config.OneskyConfig{}
 
 	/////////////////////////////////
 	// CLI-INTERFACE
 	////////////////////////////////
-	fmt.Println("Build: ", time.Now().Format("20060102-1504"), runtime.GOOS, runtime.GOARCH)
-	fmt.Println("Read config:", build.CONFIG_PATH)
-
 	cli.AppHelpTemplate = help.AppHelpTemplate
 	cli.CommandHelpTemplate = help.CommandHelpTemplate
 	cli.SubcommandHelpTemplate = help.SubcommandHelpTemplate
@@ -108,6 +89,12 @@ func main() {
 								Usage:    "Set `ACCESS_TOKEN`",
 								Required: true,
 							},
+							//&cli.StringFlag{
+							//	Name:     "access-type",
+							//	Usage:    "Set authorization type `TYPE` ('Bearer', 'Basic', etc.)",
+							//	Required: false,
+							//	Value:		"",
+							//},
 						},
 					},
 					&cli.Command{
@@ -184,9 +171,10 @@ func main() {
 								Usage:   "`LANGUAGE_ID` (Ex.: --language-id=en_US)",
 							},
 							&cli.StringFlag{
-								Name:    "file-name",
-								Aliases: []string{"f"},
-								Usage:   "`FILE_NAME`",
+								Name:     "file-name",
+								Aliases:  []string{"f"},
+								Usage:    "`FILE_NAME`",
+								Required: true,
 							},
 							&cli.StringFlag{
 								Name:  "content",
@@ -207,9 +195,10 @@ func main() {
 						UsageText:   "onesky file download --file-id=FILE_ID [--plugin-agent=USER_AGENT_HEADER_COMMENT]",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
-								Name:    "file-id",
-								Aliases: []string{"f"},
-								Usage:   "​`FILE_ID`",
+								Name:     "file-id",
+								Aliases:  []string{"f"},
+								Usage:    "​`FILE_ID`",
+								Required: true,
 							},
 							&cli.StringFlag{
 								Name: "plugin-agent",
@@ -225,11 +214,56 @@ func main() {
 					return err
 				},
 			},
+
+			// API
+			&cli.Command{
+				Name:            "api",
+				Usage:           "Manage api configuration",
+				UsageText:       "onesky [global options] api <command> [options]",
+				Description:     "Manage languages of the app",
+				HideHelpCommand: true,
+				Subcommands: []*cli.Command{
+					&cli.Command{
+						Name:        "info",
+						Aliases:     []string{"i"},
+						Action:      Api.New(Config).List,
+						Description: "Show information about api configuration",
+						Usage:       "Show information about api configuration",
+						UsageText:   "onesky api info",
+					},
+					&cli.Command{
+						Name:        "set",
+						Aliases:     []string{"s"},
+						Action:      Api.New(Config).Set,
+						Description: "List all options of api configuration",
+						Usage:       "List all options of api configuration",
+						UsageText:   "onesky api list",
+
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:  "url",
+								Usage: "`URL` - Base url",
+								Value: API_URL,
+							},
+							&cli.IntFlag{
+								Name:  "timeout",
+								Usage: "`TIMEOUT` - Request timeout",
+								Value: 30,
+							},
+						},
+					},
+				},
+			},
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "access-token",
 				Usage:    "Set `ACCESS_TOKEN`",
+				Required: false,
+			},
+			&cli.StringFlag{
+				Name:     "config-file",
+				Usage:    "Set alternative config `PATH`",
 				Required: false,
 			},
 			&cli.BoolFlag{
@@ -252,10 +286,54 @@ func main() {
 		},
 		Before: func(c *cli.Context) error {
 
+			// LOAD ALTERNATIVE CONFIG
+			currentConfigPath := c.String("config-file")
+			if currentConfigPath != "" {
+				if _, confErr := os.Stat(currentConfigPath); os.IsNotExist(confErr) {
+					return errors.New("Config not found in " + currentConfigPath)
+				} else {
+					*Config = *config.NewConfigFromFile(currentConfigPath)
+				}
+
+				// LOAD DEFAULT CONFIG
+			} else {
+				currentConfigPath = build.CONFIG_PATH
+				// Create new default config file
+				if _, confErr := os.Stat(currentConfigPath); os.IsNotExist(confErr) {
+					fmt.Print("Trying to save default config file to:", currentConfigPath)
+
+					Config = &config.OneskyConfig{
+						Title: "Onesky config",
+						Api: config.Api{
+							Url:     API_URL,
+							Timeout: API_TIMEOUT,
+						},
+					}
+
+					confErr = config.SaveConfig(currentConfigPath, Config)
+					if confErr != nil {
+						fmt.Println("\nWARNING:", confErr)
+					} else {
+						fmt.Println(".......... OK")
+					}
+
+					// Load default config
+				} else {
+					*Config = *config.NewConfigFromFile(currentConfigPath)
+				}
+			}
+
+			// DEBUG
+			if isDebug := c.Bool("debug"); isDebug {
+				fmt.Println("Build: ", time.Now().Format("20060102-1504"), runtime.GOOS, runtime.GOARCH)
+				fmt.Println("Loaded config file:", currentConfigPath)
+			}
+
+			// GLOBAL ACCESS-TOKEN
 			if tokenString := c.String("access-token"); tokenString != "" {
 				Config.Credentials.Token = tokenString
 			}
-			//fmt.Println("Access-token:", Config.Credentials.Token)
+			//fmt.Println(Config)
 
 			return nil
 		},
