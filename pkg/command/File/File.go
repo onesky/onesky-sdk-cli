@@ -4,8 +4,10 @@ import (
 	"OneSky-cli/pkg/api"
 	"OneSky-cli/pkg/command"
 	"OneSky-cli/pkg/config"
+	"errors"
 	"fmt"
 	"github.com/urfave/cli"
+	"io/ioutil"
 )
 
 type File interface {
@@ -33,7 +35,24 @@ func (f *file) Upload(c *cli.Context) (err error) {
 		request.SetParam("platformId", c.String("platform-id"))
 		request.SetParam("languageId", c.String("language-id"))
 		request.SetParam("fileName", c.String("file-name"))
-		request.SetParam("content", c.String("content"))
+
+		content := c.String("content")
+		path := c.String("path")
+
+		if content != "" && path != "" {
+			return errors.New("incongruous options --content and --path")
+
+		} else if path != "" {
+			if byteContent, err := ioutil.ReadFile(path); err == nil {
+				content = string(byteContent)
+
+				// Use it if something go wrong
+				//import "golang.org/x/exp/utf8string"
+				//content = utf8string.NewString( string(byteContent) ).String()
+			}
+		}
+
+		request.SetParam("content", content)
 
 		isDebug := c.Bool("debug")
 		responseString, e := f.api.Client().DoRequest(request, isDebug)

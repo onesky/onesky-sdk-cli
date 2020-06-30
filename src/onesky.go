@@ -173,7 +173,7 @@ func main() {
 							&cli.StringFlag{
 								Name:     "file-name",
 								Aliases:  []string{"f"},
-								Usage:    "`FILE_NAME` ",
+								Usage:    "`FILE_NAME` when file was uploaded",
 								Required: true,
 							},
 							&cli.StringFlag{
