@@ -302,7 +302,7 @@ func main() {
 				if _, confErr := os.Stat(currentConfigPath); os.IsNotExist(confErr) {
 					fmt.Print("Trying to save default config file to:", currentConfigPath)
 
-					Config = &config.OneskyConfig{
+					*Config = config.OneskyConfig{
 						Title: "Onesky config",
 						Api: config.Api{
 							Url:     API_URL,
