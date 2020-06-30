@@ -82,19 +82,19 @@ func main() {
 						Action:      Auth.New(Config).Login,
 						Description: "Authorize to access the OneSky API with access token",
 						Usage:       "Authorize to access the OneSky API with access token",
-						UsageText:   "onesky auth login --access-token=ACCESS_TOKEN",
+						UsageText:   "onesky auth login --access-token=ACCESS_TOKEN [--access-type=TYPE]",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:     "access-token",
 								Usage:    "Set `ACCESS_TOKEN`",
 								Required: true,
 							},
-							//&cli.StringFlag{
-							//	Name:     "access-type",
-							//	Usage:    "Set authorization type `TYPE` ('Bearer', 'Basic', etc.)",
-							//	Required: false,
-							//	Value:		"",
-							//},
+							&cli.StringFlag{
+								Name:     "access-type",
+								Usage:    "Set authorization type `TYPE` ('Bearer', 'Basic', etc.)",
+								Required: false,
+								Value:    "",
+							},
 						},
 					},
 					&cli.Command{
@@ -173,12 +173,16 @@ func main() {
 							&cli.StringFlag{
 								Name:     "file-name",
 								Aliases:  []string{"f"},
-								Usage:    "`FILE_NAME`",
+								Usage:    "`FILE_NAME` ",
 								Required: true,
 							},
 							&cli.StringFlag{
 								Name:  "content",
-								Usage: "​`CONTENT_ENCODED_IN_UTF8`",
+								Usage: "​`CONTENT_ENCODED_IN_UTF8` (can't be used with --path option)",
+							},
+							&cli.StringFlag{
+								Name:  "path",
+								Usage: "​`PATH` to text file encoded in UTF8 (can't be used with --content option)",
 							},
 							&cli.StringFlag{
 								Name:  "plugin-agent",

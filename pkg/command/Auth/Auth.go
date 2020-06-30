@@ -27,6 +27,10 @@ func (a *auth) Login(c *cli.Context) (e error) {
 
 	a.Config().Credentials.Token = c.String("access-token")
 
+	if authType := c.String("access-type"); authType != "" {
+		a.Config().Credentials.Type = authType
+	}
+
 	e = a.Config().Update()
 	if e == nil {
 		fmt.Println("New token: ", a.Config().Credentials.Token)
