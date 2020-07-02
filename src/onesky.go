@@ -251,7 +251,7 @@ func main() {
 							},
 							&cli.IntFlag{
 								Name:  "timeout",
-								Usage: "`TIMEOUT` - Request timeout",
+								Usage: "`TIMEOUT` - Request timeout in seconds",
 								Value: 30,
 							},
 						},
