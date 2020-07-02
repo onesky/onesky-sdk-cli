@@ -58,10 +58,7 @@ var SubcommandHelpTemplate = `NAME:
    {{.HelpName}} - {{.Usage}}
 
 USAGE:
-   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} command{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}{{if .Description}}
-
-DESCRIPTION:
-   {{.Description}}{{end}}
+   {{if .UsageText}}{{.UsageText}}{{else}}{{.HelpName}} command{{if .VisibleFlags}} [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}{{end}}
 
 COMMANDS:{{range .VisibleCommands}}
    {{join .Names ", "}} - {{.Description}}{{range .VisibleFlags}}
@@ -69,5 +66,8 @@ COMMANDS:{{range .VisibleCommands}}
 {{end}}
 OPTIONS:
    {{range .VisibleFlags}}{{.}}
-   {{end}}
+   {{end}}{{if .Description}}
+
+EXAMPLE:
+   {{.Description}}{{end}}
 `

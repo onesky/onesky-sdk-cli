@@ -68,10 +68,15 @@ func main() {
 		Commands: []*cli.Command{
 			// AUTH
 			&cli.Command{
-				Name:            "auth",
-				Usage:           "Manage credentials for the OneSky CLI",
-				UsageText:       "onesky [global options] auth <command> [options]",
-				Description:     "Manage credentials for the OneSky CLI",
+				Name:      "auth",
+				Usage:     "Manage credentials for the OneSky CLI",
+				UsageText: "onesky [global options] auth <command> [options]",
+				Description: "Authorize to access the OneSky API with access token: \n" +
+					"			onesky auth login --access-token=some-token-string --access-type=Bearer\n\n" +
+					"   List credentialed access token: \n" +
+					"			onesky auth list\n\n" +
+					"	Revoke access credential: \n" +
+					"			onesky auth revoke\n",
 				ArgsUsage:       "{login|list|revoke}",
 				HideHelpCommand: true,
 
@@ -120,10 +125,11 @@ func main() {
 			},
 			// LANG
 			&cli.Command{
-				Name:            "lang",
-				Usage:           "Manage languages of the app",
-				UsageText:       "onesky [global options] lang <command> [options]",
-				Description:     "Manage languages of the app",
+				Name:      "lang",
+				Usage:     "Manage languages of the app",
+				UsageText: "onesky [global options] lang <command> [options]",
+				Description: "List all enabled languages of the app: \n" +
+					"			onesky lang list\n",
 				HideHelpCommand: true,
 				Subcommands: []*cli.Command{
 					&cli.Command{
@@ -138,10 +144,18 @@ func main() {
 			},
 			// FILE
 			&cli.Command{
-				Name:            "file",
-				Usage:           "onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content=’{“apple-key”: “Apple”}’",
-				UsageText:       "onesky [global options] file <command> [options]",
-				Description:     "Manage files of the app",
+				Name:  "file",
+				Usage: "Manage files of the app",
+				//Usage:           "onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content=’{“apple-key”: “Apple”}’",
+				UsageText: "onesky [global options] file <command> [options]",
+				Description: "Upload content from command-line: \n" +
+					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content=’{“apple-key”: “Apple”}’\n\n" +
+					"   Upload content from local file: \n" +
+					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --path=path/to/file/with/valid.ext\n\n" +
+					"	Download file by file id: \n" +
+					"			onesky file download --file-id=\"09547d3f-3734-4efd-801a-0aea74fc301e\" --plugin-agent=intellij\n\n" +
+					"	List all files of the app: \n" +
+					"			onesky file list\n",
 				HideHelpCommand: true,
 				Subcommands: []*cli.Command{
 					&cli.Command{
@@ -158,7 +172,7 @@ func main() {
 						Aliases:     []string{"u"},
 						Description: "Upload a new file to the app",
 						Usage:       "Upload a new file to the app",
-						UsageText:   "onesky file upload --platform-id=PLATFORM_ID --language-id=LANGUAGE_ID --file-name=FILE_NAME --content=CONTENT_ENCODED_IN_UTF8 [--plugin-agent=intellij]",
+						UsageText:   "onesky file upload --platform-id=PLATFORM_ID --language-id=LANGUAGE_ID --file-name=FILE_NAME {--content=CONTENT_ENCODED_IN_UTF8|--path=PATH} [--plugin-agent=intellij]",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:    "platform-id",
@@ -194,16 +208,22 @@ func main() {
 						Name:        "download",
 						Aliases:     []string{"d"},
 						Action:      File.New(Config).Download,
-						Description: "Get file content by id",
-						Usage:       "Get file content by id",
+						Description: "Download file by file id",
+						Usage:       "Download file by file id",
 						UsageText:   "onesky file download --file-id=FILE_ID [--plugin-agent=USER_AGENT_HEADER_COMMENT]",
 						Flags: []cli.Flag{
 							&cli.StringFlag{
 								Name:     "file-id",
-								Aliases:  []string{"f"},
+								Aliases:  []string{"i"},
 								Usage:    "​`FILE_ID`",
 								Required: true,
 							},
+							//&cli.StringFlag{
+							//	Name:     "output",
+							//	Aliases:  []string{"o"},
+							//	Usage:    "​Save output to given `FILE_NAME`",
+							//	Required: true,
+							//},
 							&cli.StringFlag{
 								Name: "plugin-agent",
 								//Aliases: []string{"a"},
@@ -221,11 +241,15 @@ func main() {
 
 			// API
 			&cli.Command{
-				Name:        "api",
-				Usage:       "Manage api configuration",
-				UsageText:   "onesky [global options] api <command> [options]",
-				Description: "Manage languages of the app",
-				HideHelp:    true,
+				Name:      "api",
+				Usage:     "Manage api configuration",
+				UsageText: "onesky [global options] api <command> [options]",
+				Description: "Show information about api configuration: \n" +
+					"			onesky api info\n\n" +
+					"   Set options of api configuration: \n" +
+					"			onesky set --url=\"https://management-api.onesky.app/v1\" --timeout=10\n",
+				HideHelp:        true,
+				HideHelpCommand: true,
 				Subcommands: []*cli.Command{
 					&cli.Command{
 						Name:        "info",
@@ -239,9 +263,9 @@ func main() {
 						Name:        "set",
 						Aliases:     []string{"s"},
 						Action:      Api.New(Config).Set,
-						Description: "List all options of api configuration",
-						Usage:       "List all options of api configuration",
-						UsageText:   "onesky api list",
+						Description: "Set options of api configuration",
+						Usage:       "Set options of api configuration",
+						UsageText:   "onesky api set",
 
 						Flags: []cli.Flag{
 							&cli.StringFlag{
