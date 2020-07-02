@@ -2,7 +2,6 @@ package api
 
 import (
 	"OneSky-cli/pkg/config"
-	"net/http"
 )
 
 type Api interface {
@@ -37,9 +36,8 @@ func (a *api) NewApiRequest(method, path string) (r *Request, err error) {
 	}
 
 	if err = endpointUrl.Join(path); err == nil {
-		httpRequest := &http.Request{}
-		a.authorizeHttpRequest(httpRequest)
-		r = newApiRequest(httpRequest)
+		r = NewRequest(nil)
+		a.authorizeHttpRequest(r)
 		r.Method = method
 		r.URL = endpointUrl.URL
 	}
@@ -47,8 +45,7 @@ func (a *api) NewApiRequest(method, path string) (r *Request, err error) {
 	return r, err
 }
 
-func (a *api) authorizeHttpRequest(request *http.Request) {
-	request.Header = http.Header{}
+func (a *api) authorizeHttpRequest(request *Request) {
 	if a.config.Credentials.Type == "" {
 		request.Header.Add("authorization", a.config.Credentials.Token)
 	} else {

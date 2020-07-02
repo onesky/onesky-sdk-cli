@@ -19,10 +19,22 @@ type Request struct {
 	params *RequestParams
 }
 
-func newApiRequest(r *http.Request) *Request {
-	request := &Request{
-		Request: r,
-		params:  &RequestParams{},
+func NewRequest(p *RequestParams) *Request {
+	httpRequest, _ := http.NewRequest("", "", nil)
+	return WrapHttpRequest(httpRequest, p)
+}
+
+func WrapHttpRequest(r *http.Request, p *RequestParams) *Request {
+	request := &Request{Request: r}
+
+	if request.Request.Header == nil {
+		request.Request.Header = http.Header{}
+	}
+
+	if p != nil {
+		request.params = p
+	} else {
+		request.params = &RequestParams{}
 	}
 
 	request.Header.Add("Accept", TypeJson)
