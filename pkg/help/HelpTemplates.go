@@ -1,6 +1,6 @@
 package help
 
-var AppHelpTemplate = `NAME:APP
+var AppHelpTemplate = `NAME:
    {{.Name}}{{if .Usage}} - {{.Usage}}{{end}}
 
 USAGE:
@@ -16,10 +16,10 @@ AUTHOR{{with $length := len .Authors}}{{if ne 1 $length}}S{{end}}{{end}}:
    {{range $index, $author := .Authors}}{{if $index}}
    {{end}}{{$author}}{{end}}{{end}}{{if .VisibleCommands}}
 
-COMMANDS:{{range .VisibleCommands}}
+COMMANDS:{{range .VisibleCommands}}{{if not .HideHelp}}
    {{join .Names ", "}}{{"\t"}}- {{.Usage}}{{if .Subcommands}}{{range .Subcommands}}
 	{{join .Names ", "}}{{"\t"}}- {{.Usage}}{{end}}
-{{end}}{{end}}
+{{end}}{{end}}{{end}}
 
 GLOBAL OPTIONS:
    {{range $index, $option := .VisibleFlags}}{{if $index}}
@@ -34,7 +34,7 @@ Type "onesky <command> --help" for more information{{end}}
 // CommandHelpTemplate is the text template for the command help topic.
 // cli.go uses text/template to render templates. You can
 // render custom help text by setting this variable.
-var CommandHelpTemplate = `NAME:CMD
+var CommandHelpTemplate = `NAME:
    {{.HelpName}}
 
 USAGE:
@@ -54,7 +54,7 @@ OPTIONS:
 // SubcommandHelpTemplate is the text template for the subcommand help topic.
 // cli.go uses text/template to render templates. You can
 // render custom help text by setting this variable.
-var SubcommandHelpTemplate = `NAME:SUB
+var SubcommandHelpTemplate = `NAME:
    {{.HelpName}} - {{.Usage}}
 
 USAGE:

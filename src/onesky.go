@@ -221,11 +221,11 @@ func main() {
 
 			// API
 			&cli.Command{
-				Name:            "api",
-				Usage:           "Manage api configuration",
-				UsageText:       "onesky [global options] api <command> [options]",
-				Description:     "Manage languages of the app",
-				HideHelpCommand: true,
+				Name:        "api",
+				Usage:       "Manage api configuration",
+				UsageText:   "onesky [global options] api <command> [options]",
+				Description: "Manage languages of the app",
+				HideHelp:    true,
 				Subcommands: []*cli.Command{
 					&cli.Command{
 						Name:        "info",
