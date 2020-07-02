@@ -304,7 +304,7 @@ func main() {
 				currentConfigPath = build.CONFIG_PATH
 				// Create new default config file
 				if _, confErr := os.Stat(currentConfigPath); os.IsNotExist(confErr) {
-					fmt.Print("Trying to save default config file to:", currentConfigPath)
+					fmt.Print("Initializing to:", currentConfigPath)
 
 					*Config = config.OneskyConfig{
 						Title: "Onesky config",
