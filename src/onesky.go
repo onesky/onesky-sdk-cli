@@ -13,14 +13,18 @@ import (
 	"github.com/urfave/cli"
 	"os"
 	"runtime"
-	"syscall"
 	"time"
 )
 
-var onTerminate = func(code syscall.Signal) {}
+//var onTerminate = func(code syscall.Signal) {}
 
-const API_URL = "https://management-api.onesky.app/v1"
-const API_TIMEOUT = 30
+var DefaultConfig = config.OneskyConfig{
+	Title: "OneSky config",
+	Api: config.Api{
+		Url:     "https://management-api.onesky.app/v1",
+		Timeout: 30,
+	},
+}
 
 func init() {
 
@@ -260,12 +264,12 @@ func main() {
 							&cli.StringFlag{
 								Name:  "url",
 								Usage: "`URL` - Base url",
-								Value: API_URL,
+								Value: DefaultConfig.Api.Url,
 							},
 							&cli.IntFlag{
 								Name:  "timeout",
 								Usage: "`TIMEOUT` - Request timeout in seconds",
-								Value: 30,
+								Value: DefaultConfig.Api.Timeout,
 							},
 						},
 					},
@@ -317,15 +321,9 @@ func main() {
 				currentConfigPath = build.CONFIG_PATH
 				// Create new default config file
 				if _, confErr := os.Stat(currentConfigPath); os.IsNotExist(confErr) {
-					fmt.Print("Initializing to:", currentConfigPath)
+					fmt.Print("Initializing to: ", currentConfigPath)
 
-					*Config = config.OneskyConfig{
-						Title: "Onesky config",
-						Api: config.Api{
-							Url:     API_URL,
-							Timeout: API_TIMEOUT,
-						},
-					}
+					*Config = DefaultConfig
 
 					confErr = config.SaveConfig(currentConfigPath, Config)
 					if confErr != nil {
