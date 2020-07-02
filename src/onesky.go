@@ -212,23 +212,9 @@ func main() {
 						Usage:       "Download file by file id",
 						UsageText:   "onesky file download --file-id=FILE_ID [--plugin-agent=USER_AGENT_HEADER_COMMENT]",
 						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:     "file-id",
-								Aliases:  []string{"i"},
-								Usage:    "​`FILE_ID`",
-								Required: true,
-							},
-							//&cli.StringFlag{
-							//	Name:     "output",
-							//	Aliases:  []string{"o"},
-							//	Usage:    "​Save output to given `FILE_NAME`",
-							//	Required: true,
-							//},
-							&cli.StringFlag{
-								Name: "plugin-agent",
-								//Aliases: []string{"a"},
-								Usage: "​​`USER_AGENT_HEADER_COMMENT` (Ex.: --plugin-agent=intellij)",
-							},
+							File.FLAG_FileId,
+							File.FLAG_Output,
+							File.FLAG_PluginAgent,
 						},
 					},
 				},

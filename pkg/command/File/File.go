@@ -80,13 +80,20 @@ func (f *file) List(c *cli.Context) (err error) {
 
 func (f *file) Download(c *cli.Context) (e error) {
 
-	path := fmt.Sprintf("/files/%s/contents", c.String("file-id"))
+	path := fmt.Sprintf("/files/%s/contents", c.String(FLAG_FileId.Name))
 	request, err := f.api.NewApiRequest("GET", path)
 	if err == nil {
 		isDebug := c.Bool("debug")
 		responseString, e := f.api.Client().DoRequest(request, isDebug)
-		if e == nil && !isDebug {
-			fmt.Println(string(responseString))
+		if e == nil {
+
+			if savePath := c.String(FLAG_Output.Name); savePath != "" {
+				return ioutil.WriteFile(savePath, responseString, 0660)
+			}
+
+			if !isDebug {
+				fmt.Println(string(responseString))
+			}
 		}
 	}
 
