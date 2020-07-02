@@ -45,6 +45,9 @@ func main() {
 		Aliases: []string{"h"},
 		Usage:   "Display information about built-in commands",
 	}
+	cli.VersionPrinter = func(c *cli.Context) {
+		fmt.Fprintln(c.App.Writer, c.App.Version)
+	}
 
 	Cli := &cli.App{
 		Name:     "onesky",
