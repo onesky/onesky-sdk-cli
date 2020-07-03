@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
-	"log"
 	"os"
 )
 
@@ -25,22 +24,23 @@ func SaveConfig(path string, config *OneskyConfig) (err error) {
 	return err
 }
 
-func NewConfig(config string) *OneskyConfig {
+//func NewConfig(config string) (OneskyConfig, error) {
+//
+//	var Config OneskyConfig
+//	_, err := toml.Decode(config, &Config)
+//	if err == nil {
+//	Config.source = path
+//	}
+//
+//	return Config, err
+//}
 
-	var Config *OneskyConfig
-	if _, err := toml.Decode(config, &Config); err != nil {
-		log.Fatalln(err)
+func NewConfigFromFile(path string) (OneskyConfig, error) {
+	var Config OneskyConfig
+	_, err := toml.DecodeFile(path, &Config)
+	if err == nil {
+		Config.source = path
 	}
 
-	return Config
-}
-
-func NewConfigFromFile(path string) *OneskyConfig {
-	var Config *OneskyConfig
-	if _, err := toml.DecodeFile(path, &Config); err != nil {
-		log.Println(err)
-	}
-	Config.source = path
-
-	return Config
+	return Config, err
 }

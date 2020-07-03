@@ -1,8 +1,7 @@
 package Api
 
 import (
-	"OneSky-cli/pkg/command"
-	"OneSky-cli/pkg/config"
+	"OneSky-cli/pkg/context"
 	"fmt"
 	"github.com/fatih/structs"
 	"github.com/urfave/cli"
@@ -13,17 +12,8 @@ type Api interface {
 	Set(*cli.Context) error
 }
 
-type api struct {
-	command.Command
-}
-
-func New(config *config.OneskyConfig) Api {
-	return &api{
-		command.New(config),
-	}
-}
-
-func (a *api) List(c *cli.Context) (err error) {
+func List(c *cli.Context) (err error) {
+	a := c.App.Metadata["context"].(context.AppContext)
 
 	for k, v := range structs.Map(a.Config().Api) {
 		fmt.Println(k+":", v)
@@ -31,7 +21,8 @@ func (a *api) List(c *cli.Context) (err error) {
 	return err
 }
 
-func (a *api) Set(c *cli.Context) (e error) {
+func Set(c *cli.Context) (e error) {
+	a := c.App.Metadata["context"].(context.AppContext)
 
 	if baseUrl := c.String("url"); baseUrl != "" {
 		a.Config().Api.Url = baseUrl

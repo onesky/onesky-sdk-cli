@@ -1,9 +1,8 @@
 package Lang
 
 import (
-	"OneSky-cli/pkg/api"
-	"OneSky-cli/pkg/command"
-	"OneSky-cli/pkg/config"
+	. "OneSky-cli/pkg/api"
+	"OneSky-cli/pkg/context"
 	"fmt"
 	"github.com/urfave/cli"
 )
@@ -12,25 +11,18 @@ type Lang interface {
 	List(*cli.Context) error
 }
 
-type lang struct {
-	command.Command
-}
+func List(c *cli.Context) (err error) {
+	ctx := c.App.Metadata["context"].(context.AppContext)
 
-func New(config *config.OneskyConfig) Lang {
-	return &lang{
-		command.New(config),
-	}
-}
-
-func (l *lang) List(c *cli.Context) (err error) {
-
-	apiClient := api.New(l.Config())
-	request, err := apiClient.NewApiRequest("GET", "/languages")
+	api, err := New(ctx)
 	if err == nil {
-		isDebug := c.Bool("debug")
-		responseString, e := apiClient.Client().DoRequest(request, isDebug)
-		if e == nil && !isDebug {
-			fmt.Println(string(responseString))
+		request, err := api.CreateRequest("GET", "/languages")
+		if err == nil {
+
+			responseString, e := api.Client().DoRequest(request, ctx.Flags().Debug)
+			if e == nil && !ctx.Flags().Debug {
+				fmt.Println(string(responseString))
+			}
 		}
 	}
 

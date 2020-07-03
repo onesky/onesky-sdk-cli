@@ -1,8 +1,7 @@
 package Auth
 
 import (
-	"OneSky-cli/pkg/command"
-	"OneSky-cli/pkg/config"
+	"OneSky-cli/pkg/context"
 	"fmt"
 	"github.com/urfave/cli"
 )
@@ -13,17 +12,8 @@ type Auth interface {
 	Revoke(*cli.Context) error
 }
 
-type auth struct {
-	command.Command
-}
-
-func New(config *config.OneskyConfig) Auth {
-	return &auth{
-		command.New(config),
-	}
-}
-
-func (a *auth) Login(c *cli.Context) (e error) {
+func Login(c *cli.Context) (e error) {
+	a := c.App.Metadata["context"].(context.AppContext)
 
 	a.Config().Credentials.Token = c.String("access-token")
 
@@ -40,7 +30,9 @@ func (a *auth) Login(c *cli.Context) (e error) {
 	return e
 }
 
-func (a *auth) List(c *cli.Context) (e error) {
+func List(c *cli.Context) (e error) {
+	a := c.App.Metadata["context"].(context.AppContext)
+
 	if tok := a.Config().Credentials.Token; tok != "" {
 		fmt.Println("Access token:", a.Config().Credentials.Token)
 	} else {
@@ -50,7 +42,9 @@ func (a *auth) List(c *cli.Context) (e error) {
 
 }
 
-func (a *auth) Revoke(c *cli.Context) (e error) {
+func Revoke(c *cli.Context) (e error) {
+	a := c.App.Metadata["context"].(context.AppContext)
+
 	a.Config().Credentials.Token = ""
 
 	e = a.Config().Update()

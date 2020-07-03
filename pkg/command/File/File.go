@@ -1,9 +1,8 @@
 package File
 
 import (
-	"OneSky-cli/pkg/api"
-	"OneSky-cli/pkg/command"
-	"OneSky-cli/pkg/config"
+	. "OneSky-cli/pkg/api"
+	"OneSky-cli/pkg/context"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli"
@@ -16,83 +15,86 @@ type File interface {
 	Download(*cli.Context) error
 }
 
-type file struct {
-	command.Command
-	api api.Api
-}
-
-func New(config *config.OneskyConfig) File {
-	return &file{
-		Command: command.New(config),
-		api:     api.New(config),
-	}
-}
-
-func (f *file) Upload(c *cli.Context) (err error) {
-
-	request, err := f.api.NewApiRequest("POST", "/files")
+func Upload(c *cli.Context) (err error) {
+	appContext := c.App.Metadata["context"].(context.AppContext)
+	api, err := New(appContext)
 	if err == nil {
-		request.SetParam("platformId", c.String("platform-id"))
-		request.SetParam("languageId", c.String("language-id"))
-		request.SetParam("fileName", c.String("file-name"))
 
-		content := c.String("content")
-		path := c.String("path")
+		request, err := api.CreateRequest("POST", "/files")
+		if err == nil {
+			request.SetParam("platformId", c.String(FlagPlatformId.Name))
+			request.SetParam("languageId", c.String(FlagLanguageId.Name))
+			request.SetParam("fileName", c.String(FlagFileName.Name))
 
-		if content != "" && path != "" {
-			return errors.New("incongruous options --content and --path")
-
-		} else if path != "" {
-			if byteContent, err := ioutil.ReadFile(path); err == nil {
-				content = string(byteContent)
-
-				// Use it if something go wrong
-				//import "golang.org/x/exp/utf8string"
-				//content = utf8string.NewString( string(byteContent) ).String()
-			}
-		}
-
-		request.SetParam("content", content)
-
-		isDebug := c.Bool("debug")
-		responseString, e := f.api.Client().DoRequest(request, isDebug)
-		if e == nil && !isDebug {
-			fmt.Println(string(responseString))
-		}
-	}
-
-	return err
-}
-
-func (f *file) List(c *cli.Context) (err error) {
-
-	request, err := f.api.NewApiRequest("GET", "/files")
-	if err == nil {
-		isDebug := c.Bool("debug")
-		responseString, e := f.api.Client().DoRequest(request, isDebug)
-		if e == nil && !isDebug {
-			fmt.Println(string(responseString))
-		}
-	}
-
-	return err
-}
-
-func (f *file) Download(c *cli.Context) (e error) {
-
-	path := fmt.Sprintf("/files/%s/contents", c.String(FLAG_FileId.Name))
-	request, err := f.api.NewApiRequest("GET", path)
-	if err == nil {
-		isDebug := c.Bool("debug")
-		responseString, e := f.api.Client().DoRequest(request, isDebug)
-		if e == nil {
-
-			if savePath := c.String(FLAG_Output.Name); savePath != "" {
-				return ioutil.WriteFile(savePath, responseString, 0660)
+			if pa := c.String(FlagPluginAgent.Name); pa != "" {
+				request.Agent().SetPlugin(pa)
 			}
 
-			if !isDebug {
+			content := c.String(FlagFileContent.Name)
+			path := c.String(FlagFilePath.Name)
+			if content != "" && path != "" {
+				return errors.New("incongruous options --content and --path")
+			} else if path != "" {
+				if byteContent, err := ioutil.ReadFile(path); err == nil {
+					content = string(byteContent)
+
+					// Use it if something go wrong
+					//import "golang.org/x/exp/utf8string"
+					//content = utf8string.NewString( string(byteContent) ).String()
+				}
+			}
+
+			request.SetParam("content", content)
+
+			responseString, err := api.Client().DoRequest(request, appContext.Flags().Debug)
+
+			if err == nil && !appContext.Flags().Debug {
 				fmt.Println(string(responseString))
+			}
+		}
+	}
+
+	return err
+}
+
+func List(c *cli.Context) (err error) {
+	appContext := c.App.Metadata["context"].(context.AppContext)
+	api, err := New(appContext)
+	if err == nil {
+
+		request, err := api.CreateRequest("GET", "/files")
+		if err == nil {
+
+			responseString, e := api.Client().DoRequest(request, appContext.Flags().Debug)
+
+			if e == nil && !appContext.Flags().Debug {
+				fmt.Println(string(responseString))
+			}
+		}
+	}
+
+	return err
+}
+
+func Download(c *cli.Context) (e error) {
+	appContext := c.App.Metadata["context"].(context.AppContext)
+	api, err := New(appContext)
+	if err == nil {
+
+		path := fmt.Sprintf("/files/%s/contents", c.String(FlagFileId.Name))
+		request, err := api.CreateRequest("GET", path)
+		if err == nil {
+
+			responseString, e := api.Client().DoRequest(request, appContext.Flags().Debug)
+			if e == nil {
+
+				if savePath := c.String(FlagOutput.Name); savePath != "" {
+					return ioutil.WriteFile(savePath, responseString, 0660)
+				}
+
+				if !appContext.Flags().Debug {
+					fmt.Println(string(responseString))
+				}
 			}
 		}
 	}

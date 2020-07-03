@@ -18,6 +18,10 @@ func (o *OneskyConfig) Update() error {
 	return errors.New("unknown source")
 }
 
+func (o *OneskyConfig) Source() string {
+	return o.source
+}
+
 type Credentials struct {
 	Token string
 	Type  string // Bearer, Basic and etc

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"OneSky-cli/pkg/config"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -12,14 +11,24 @@ import (
 
 type Client interface {
 	DoRequest(request *Request, debug bool) ([]byte, error)
+	SetTimeout(timeout int)
+	Timeout() int
 }
 
 type client struct {
-	config *config.OneskyConfig
+	defaultTimeout int
 }
 
-func newClient(config *config.OneskyConfig) Client {
-	return &client{config}
+func NewClient() Client {
+	return &client{30}
+}
+
+func (c *client) SetTimeout(timeout int) {
+	c.defaultTimeout = timeout
+}
+
+func (c *client) Timeout() int {
+	return c.defaultTimeout
 }
 
 func (c *client) DoRequest(request *Request, debug bool) (data []byte, err error) {
@@ -34,8 +43,8 @@ func (c *client) DoRequest(request *Request, debug bool) (data []byte, err error
 	}
 
 	httpClient := &http.Client{}
-	if c.config.Api.Timeout > 0 {
-		httpClient.Timeout = time.Duration(c.config.Api.Timeout) * time.Second
+	if c.Timeout() > 0 {
+		httpClient.Timeout = time.Duration(c.Timeout()) * time.Second
 	}
 
 	response, err := httpClient.Do(request.Request)

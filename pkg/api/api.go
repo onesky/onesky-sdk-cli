@@ -1,54 +1,58 @@
 package api
 
 import (
-	"OneSky-cli/pkg/config"
+	"OneSky-cli/pkg/context"
 )
 
 type Api interface {
 	Client() Client
-	NewApiRequest(method, path string) (*Request, error)
+	CreateRequest(method, path string) (*Request, error)
 }
 
 type api struct {
-	config *config.OneskyConfig
-	client Client
+	baseUrl *Url
+	context context.AppContext
+	client  Client
 }
 
-func New(config *config.OneskyConfig) Api {
-	return &api{
-		config: config,
-		client: nil,
+func New(context context.AppContext) (Api, error) {
+
+	api := &api{
+		context: context,
+		client:  nil,
 	}
+
+	url, err := NewUrl(context.Config().Api.Url)
+	if err == nil {
+		api.baseUrl = url
+	}
+
+	return api, err
 }
 
 func (a *api) Client() Client {
 	if a.client == nil {
-		a.client = newClient(a.config)
+		a.client = NewClient()
 	}
 	return a.client
 }
 
-func (a *api) NewApiRequest(method, path string) (r *Request, err error) {
+func (a *api) CreateRequest(method, path string) (r *Request, err error) {
 
-	endpointUrl, err := NewUrl(a.config.Api.Url)
-	if err != nil {
-		return r, err
-	}
-
-	if err = endpointUrl.Join(path); err == nil {
+	if err = a.baseUrl.Join(path); err == nil {
 		r = NewRequest(nil)
-		a.authorizeHttpRequest(r)
+		r.SetAgent(NewRequestAgent(a.context.Build().ProductName, a.context.Build().ProductVersion, ""))
+
+		if token := a.context.Flags().AuthString; token != "" {
+			r.SetAuth(NewRequestAuthorization(token, a.context.Flags().AuthType))
+
+		} else if token = a.context.Config().Credentials.Token; token != "" {
+			r.SetAuth(NewRequestAuthorization(token, a.context.Config().Credentials.Type))
+		}
+
 		r.Method = method
-		r.URL = endpointUrl.URL
+		r.URL = a.baseUrl.URL
 	}
 
 	return r, err
-}
-
-func (a *api) authorizeHttpRequest(request *Request) {
-	if a.config.Credentials.Type == "" {
-		request.Header.Add("authorization", a.config.Credentials.Token)
-	} else {
-		request.Header.Add("authorization", a.config.Credentials.Type+" "+a.config.Credentials.Token)
-	}
 }
