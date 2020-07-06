@@ -249,8 +249,14 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:     "access-token",
-				Usage:    "Set `ACCESS_TOKEN`",
+				Usage:    "Set global `TOKEN` (access-token from config will be ignored)",
 				Required: false,
+			},
+			&cli.StringFlag{
+				Name:     "access-type",
+				Usage:    "Set global authorization `TYPE` (access-type from config will be ignored)",
+				Required: false,
+				Value:    "Bearer",
 			},
 			&cli.StringFlag{
 				Name:     "config-file",
