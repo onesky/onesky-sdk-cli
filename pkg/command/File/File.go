@@ -85,6 +85,10 @@ func Download(c *cli.Context) (e error) {
 		request, err := api.CreateRequest("GET", path)
 		if err == nil {
 
+			if pa := c.String(FlagPluginAgent.Name); pa != "" {
+				request.Agent().SetPlugin(pa)
+			}
+
 			responseString, e := api.Client().DoRequest(request, appContext.Flags().Debug)
 			if e == nil {
 
