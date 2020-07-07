@@ -1,10 +1,12 @@
 package build
 
-import "OneSky-cli/pkg/config"
+import (
+	"OneSky-cli/pkg/app"
+)
 
-var DefaultConfig = config.OneskyConfig{
+var DefaultConfig = app.Config{
 	Title: "OneSky config",
-	Api: config.Api{
+	Api: app.Api{
 		Url:     "https://management-api.onesky.app/v1",
 		Timeout: 30,
 	},

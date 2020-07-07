@@ -4,8 +4,8 @@ package build
 
 import "os"
 
-const PS = '\\'
+const PS = "\\"
 
 //const DefaultConfigPath = "%APPDATA%\\onesky.toml"
-var CONFIG_PATH = os.Getenv("APPDATA") + PS + "onesky.toml"
-var PRODUCT_NAME = "onesky-cli-windows"
+var DefaultConfigPath = os.Getenv("APPDATA") + PS + "onesky.toml"
+var ProductName = "onesky-cli-windows"
