@@ -1,6 +1,10 @@
 package api
 
-import "strings"
+import (
+	"strings"
+)
+
+type RequestAuthorizationType int
 
 type RequestAuthorization interface {
 	Type() string
@@ -24,20 +28,23 @@ func NewRequestAuthorization(value, authType string) RequestAuthorization {
 }
 
 func NewRequestAuthorizationFromString(authString string) RequestAuthorization {
-	parts := strings.Fields(authString)
+	parts := strings.SplitN(authString, " ", 2)
 
-	switch len(parts) {
-	case 0:
-		{ // name / version
-			panic("Invalid string for RequestAuthorization: " + authString)
+	pLen := len(parts)
+	if authString != "" && pLen > 0 {
+		authValue := authString
+		authType := ""
+
+		if pLen > 1 {
+			if parts[0] != "" {
+				authType = parts[0]
+				authValue = authString[len(parts[0])+1:]
+			}
 		}
-	case 1:
-		{ //name / version plugin
-			return &requestAuthorization{parts[0], ""}
-		}
-	default:
-		return &requestAuthorization{strings.Join(parts[1:], " "), parts[0]}
+		return &requestAuthorization{authValue, authType}
 	}
+
+	panic("Invalid string for RequestAuthorization: " + authString)
 }
 
 func (r *requestAuthorization) Value() string {

@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"strings"
+	"regexp"
 )
 
 type RequestAgent interface {
@@ -28,24 +28,31 @@ func NewRequestAgent(name, version, plugin string) RequestAgent {
 		panic("required RequestAgent.Version")
 	}
 
-	return &requestAgent{name, version, plugin}
+	a := &requestAgent{name, version, plugin}
+
+	return a
 }
 
 func NewRequestAgentFromString(agentString string) RequestAgent {
-	parts := strings.Fields(agentString)
+	re, _ := regexp.Compile(`^([\s\w-]+)/(\s*[\w-]+)(\s)?(.+)?$(?i)`)
 
-	switch len(parts) {
-	case 3:
-		{ // name / version
-			return &requestAgent{parts[0], parts[2], ""}
+	found := re.FindAllStringSubmatch(agentString, -1)
+	if len(found) > 0 && len(found[0]) > 1 {
+		parts := found[0]
+		name := parts[1]
+		version := parts[2]
+		plugin := ""
+
+		if parts[4] == "" {
+			version += parts[3]
+		} else {
+			plugin = parts[4]
 		}
-	case 4:
-		{ //name / version plugin
-			return &requestAgent{parts[0], parts[2], parts[3]}
-		}
-	default:
-		panic("Invalid string for RequestAgent: \"" + agentString + "\"")
+
+		return NewRequestAgent(name, version, plugin)
 	}
+
+	panic("Invalid string for RequestAgent: \"" + agentString + "\"")
 }
 
 func (r *requestAgent) Name() string {
@@ -66,7 +73,12 @@ func (r *requestAgent) SetPlugin(s string) {
 
 func (r *requestAgent) String() string {
 	if r.Name() != "" && r.Version() != "" {
-		return fmt.Sprintf("%s / %s %s​", r.Name(), r.Version(), r.Plugin())
+		agentString := fmt.Sprintf("%s/%s", r.Name(), r.Version())
+
+		if r.Plugin() != "" {
+			agentString += " " + r.Plugin()
+		}
+		return agentString
 	}
 	return ""
 }

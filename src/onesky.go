@@ -1,11 +1,11 @@
 package main
 
 import (
+	"OneSky-cli/pkg/app"
 	"OneSky-cli/pkg/command/Api"
 	"OneSky-cli/pkg/command/Auth"
 	"OneSky-cli/pkg/command/File"
 	"OneSky-cli/pkg/command/Lang"
-	"OneSky-cli/pkg/config"
 	"OneSky-cli/pkg/help"
 	"OneSky-cli/src/build"
 	"fmt"
@@ -27,7 +27,7 @@ func init() {
 
 func main() {
 
-	var Config = &config.OneskyConfig{}
+	var Config = &app.Config{}
 
 	/////////////////////////////////
 	// CLI-INTERFACE

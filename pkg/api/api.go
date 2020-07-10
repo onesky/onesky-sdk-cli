@@ -1,7 +1,7 @@
 package api
 
 import (
-	"OneSky-cli/pkg/context"
+	"OneSky-cli/pkg/app"
 )
 
 type Api interface {
@@ -11,11 +11,11 @@ type Api interface {
 
 type api struct {
 	baseUrl *Url
-	context context.AppContext
+	context app.Context
 	client  Client
 }
 
-func New(context context.AppContext) (Api, error) {
+func New(context app.Context) (Api, error) {
 
 	api := &api{
 		context: context,
@@ -24,7 +24,7 @@ func New(context context.AppContext) (Api, error) {
 
 	url, err := NewUrl(context.Config().Api.Url)
 	if err == nil {
-		api.baseUrl = url
+		api.SetBaseUrl(url)
 	}
 
 	return api, err
@@ -39,20 +39,34 @@ func (a *api) Client() Client {
 
 func (a *api) CreateRequest(method, path string) (r *Request, err error) {
 
-	if err = a.baseUrl.Join(path); err == nil {
+	if err = a.BaseUrl().Join(path); err == nil {
 		r = NewRequest(nil)
-		r.SetAgent(NewRequestAgent(a.context.Build().ProductName, a.context.Build().ProductVersion, ""))
-
-		if token := a.context.Flags().AuthString; token != "" {
-			r.SetAuth(NewRequestAuthorization(token, a.context.Flags().AuthType))
-
-		} else if token = a.context.Config().Credentials.Token; token != "" {
-			r.SetAuth(NewRequestAuthorization(token, a.context.Config().Credentials.Type))
-		}
-
 		r.Method = method
-		r.URL = a.baseUrl.URL
+		r.URL = a.BaseUrl().URL
+
+		a.markRequest(r)
+		a.authorizeRequest(r)
 	}
 
 	return r, err
+}
+
+func (a *api) BaseUrl() *Url {
+	return a.baseUrl
+}
+
+func (a *api) SetBaseUrl(url *Url) {
+	a.baseUrl = url
+}
+
+func (a *api) markRequest(r *Request) {
+	if a.context.Build().ProductName+a.context.Build().ProductVersion != "" {
+		r.SetAgent(NewRequestAgent(a.context.Build().ProductName, a.context.Build().ProductVersion, ""))
+	}
+}
+
+func (a *api) authorizeRequest(r *Request) {
+	if token := a.context.Auth().Token; token != "" {
+		r.SetAuth(NewRequestAuthorization(token, a.context.Auth().Type))
+	}
 }

@@ -21,16 +21,17 @@ type Request struct {
 	auth   RequestAuthorization
 }
 
-func NewRequest(p *RequestParams) *Request {
+func NewRequest(p RequestParams) *Request {
 	httpRequest, _ := http.NewRequest("", "", nil)
 	return WrapHttpRequest(httpRequest, p)
 }
 
-func WrapHttpRequest(r *http.Request, p *RequestParams) *Request {
+func WrapHttpRequest(r *http.Request, p RequestParams) *Request {
 	request := &Request{
 		Request: r,
 		agent:   &requestAgent{},
 		auth:    &requestAuthorization{},
+		params:  &RequestParams{},
 	}
 
 	if request.Request.Header == nil {
@@ -38,9 +39,9 @@ func WrapHttpRequest(r *http.Request, p *RequestParams) *Request {
 	}
 
 	if p != nil {
-		request.params = p
+		request.SetParams(p)
 	} else {
-		request.params = &RequestParams{}
+		request.SetParams(RequestParams{})
 	}
 
 	request.Header.Add("Accept", TypeJson)

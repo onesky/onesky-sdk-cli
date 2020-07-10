@@ -1,7 +1,7 @@
 package Auth
 
 import (
-	"OneSky-cli/pkg/context"
+	"OneSky-cli/pkg/app"
 	"fmt"
 	"github.com/urfave/cli"
 )
@@ -13,14 +13,14 @@ type Auth interface {
 }
 
 func Login(c *cli.Context) (e error) {
-	a := c.App.Metadata["context"].(context.AppContext)
+	a := c.App.Metadata["context"].(app.Context)
 
 	a.Config().Credentials.Token = c.String("access-token")
 	a.Config().Credentials.Type = c.String("access-type")
 
 	e = a.Config().Update()
 	if e == nil {
-		fmt.Printf("New token: (%s) %s\n", a.Config().Credentials.Type, a.Config().Credentials.Token)
+		fmt.Printf("NewContext token: (%s) %s\n", a.Config().Credentials.Type, a.Config().Credentials.Token)
 	} else {
 		fmt.Println("Unable to update config: ", e.Error())
 	}
@@ -28,7 +28,7 @@ func Login(c *cli.Context) (e error) {
 }
 
 func List(c *cli.Context) (e error) {
-	a := c.App.Metadata["context"].(context.AppContext)
+	a := c.App.Metadata["context"].(app.Context)
 
 	if tok := a.Config().Credentials.Token; tok != "" {
 		fmt.Printf("Access token: (%s) %s\n", a.Config().Credentials.Type, a.Config().Credentials.Token)
@@ -40,7 +40,7 @@ func List(c *cli.Context) (e error) {
 }
 
 func Revoke(c *cli.Context) (e error) {
-	a := c.App.Metadata["context"].(context.AppContext)
+	a := c.App.Metadata["context"].(app.Context)
 
 	a.Config().Credentials.Token = ""
 

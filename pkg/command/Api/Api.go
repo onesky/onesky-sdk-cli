@@ -1,7 +1,7 @@
 package Api
 
 import (
-	"OneSky-cli/pkg/context"
+	"OneSky-cli/pkg/app"
 	"fmt"
 	"github.com/fatih/structs"
 	"github.com/urfave/cli"
@@ -13,7 +13,7 @@ type Api interface {
 }
 
 func List(c *cli.Context) (err error) {
-	a := c.App.Metadata["context"].(context.AppContext)
+	a := c.App.Metadata["context"].(app.Context)
 
 	for k, v := range structs.Map(a.Config().Api) {
 		fmt.Println(k+":", v)
@@ -22,7 +22,7 @@ func List(c *cli.Context) (err error) {
 }
 
 func Set(c *cli.Context) (e error) {
-	a := c.App.Metadata["context"].(context.AppContext)
+	a := c.App.Metadata["context"].(app.Context)
 
 	if baseUrl := c.String("url"); baseUrl != "" {
 		a.Config().Api.Url = baseUrl

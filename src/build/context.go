@@ -1,8 +1,7 @@
 package build
 
 import (
-	"OneSky-cli/pkg/config"
-	. "OneSky-cli/pkg/context"
+	"OneSky-cli/pkg/app"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli"
@@ -11,33 +10,40 @@ import (
 	"time"
 )
 
-func CreateAppContext(c *cli.Context) (context AppContext, err error) {
+func CreateAppContext(c *cli.Context) (context app.Context, err error) {
 
-	appContext := New(nil)
-	*appContext.Build() = AppBuild{
+	appContext := app.NewContext(nil)
+	*appContext.Build() = app.Build{
 		BuildId:        time.Now().Format("20060102-1504"),
 		BuildInfo:      runtime.GOOS + "(" + runtime.GOARCH + ")",
 		ConfigPath:     DefaultConfigPath,
 		ProductName:    ProductName,
 		ProductVersion: c.App.Version,
 	}
-	*(appContext.Flags()) = AppFlags{
+	*(appContext.Flags()) = app.Flags{
 		ConfigPath: c.String("config-file"),
 		AuthString: c.String("access-token"),
 		AuthType:   c.String("access-type"),
 		Debug:      c.Bool("debug"),
 	}
 
-	/////////////////////////////////////// CONFIG ///////////////////////////////////
-	//var Config *config.OneskyConfig
+	*(appContext.Config()), err = buildConfig(c)
+
+	*(appContext.Auth()) = buildAuth(c, appContext.Config())
+
+	return appContext, err
+}
+
+func buildConfig(c *cli.Context) (conf app.Config, err error) {
+	//var Config *config.Config
 
 	// TRY TO LOAD ALTERNATIVE CONFIG
-	currentConfigPath := appContext.Flags().ConfigPath
+	currentConfigPath := c.String("config-file")
 	if currentConfigPath != "" {
 		if _, err = os.Stat(currentConfigPath); os.IsNotExist(err) {
-			return context, errors.New("Config not found in " + currentConfigPath)
+			return conf, errors.New("Config not found in " + currentConfigPath)
 		} else {
-			*appContext.Config(), err = config.NewConfigFromFile(currentConfigPath)
+			conf, err = app.NewConfigFromFile(currentConfigPath)
 		}
 
 		// LOAD DEFAULT CONFIG
@@ -49,9 +55,9 @@ func CreateAppContext(c *cli.Context) (context AppContext, err error) {
 			fmt.Print("Initializing to: ", currentConfigPath)
 
 			// Even if file can't be saved, we can go continue
-			*appContext.Config() = DefaultConfig
+			conf = DefaultConfig
 
-			confErr = config.SaveConfig(currentConfigPath, appContext.Config())
+			confErr = app.SaveConfig(currentConfigPath, &conf)
 			if confErr != nil {
 				fmt.Println("\nWARNING:", confErr)
 			} else {
@@ -60,10 +66,24 @@ func CreateAppContext(c *cli.Context) (context AppContext, err error) {
 
 			// Load default config
 		} else {
-			*appContext.Config(), err = config.NewConfigFromFile(currentConfigPath)
+			conf, err = app.NewConfigFromFile(currentConfigPath)
 		}
 	}
-	/////////////////////////////////////// end of CONFIG ///////////////////////////////////
 
-	return appContext, err
+	return conf, err
+}
+
+func buildAuth(c *cli.Context, conf *app.Config) app.Auth {
+	// logic for auth of app-context
+	token := c.String("config-file")
+	tokenType := c.String("config-type")
+	if token == "" {
+		token = conf.Credentials.Token
+		tokenType = conf.Credentials.Type
+	}
+
+	return app.Auth{
+		Token: token,
+		Type:  tokenType,
+	}
 }

@@ -2,7 +2,7 @@ package File
 
 import (
 	. "OneSky-cli/pkg/api"
-	"OneSky-cli/pkg/context"
+	"OneSky-cli/pkg/app"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli"
@@ -16,7 +16,7 @@ type File interface {
 }
 
 func Upload(c *cli.Context) (err error) {
-	appContext := c.App.Metadata["context"].(context.AppContext)
+	appContext := c.App.Metadata["context"].(app.Context)
 	api, err := New(appContext)
 	if err == nil {
 
@@ -58,7 +58,7 @@ func Upload(c *cli.Context) (err error) {
 }
 
 func List(c *cli.Context) (err error) {
-	appContext := c.App.Metadata["context"].(context.AppContext)
+	appContext := c.App.Metadata["context"].(app.Context)
 	api, err := New(appContext)
 	if err == nil {
 
@@ -77,7 +77,7 @@ func List(c *cli.Context) (err error) {
 }
 
 func Download(c *cli.Context) (e error) {
-	appContext := c.App.Metadata["context"].(context.AppContext)
+	appContext := c.App.Metadata["context"].(app.Context)
 	api, err := New(appContext)
 	if err == nil {
 
