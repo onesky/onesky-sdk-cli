@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"os"
+	"path/filepath"
 )
 
 type Config struct {
@@ -36,18 +37,26 @@ func (o *Config) Source() string {
 }
 
 func SaveConfig(path string, config *Config) (err error) {
-	f, err := os.Create(path)
 
-	if err != nil {
-		fmt.Println(err)
+	baseDir := filepath.Dir(path)
+	if _, err = os.Stat(baseDir); os.IsNotExist(err) {
+		err = os.MkdirAll(baseDir, 0660)
 	}
 
-	config.source = path
-	if err := toml.NewEncoder(f).Encode(config); err != nil {
-		fmt.Println(err)
-	}
-	if err := f.Close(); err != nil {
-		fmt.Println(err)
+	if err == nil {
+		f, err := os.Create(path)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		config.source = path
+		if err := toml.NewEncoder(f).Encode(config); err != nil {
+			fmt.Println(err)
+		}
+		if err := f.Close(); err != nil {
+			fmt.Println(err)
+		}
 	}
 
 	return err
