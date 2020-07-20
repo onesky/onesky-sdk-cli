@@ -52,16 +52,16 @@ func buildConfig(c *cli.Context) (conf app.Config, err error) {
 
 		// Create new default config file
 		if _, confErr := os.Stat(currentConfigPath); os.IsNotExist(confErr) {
-			fmt.Print("Initializing to: ", currentConfigPath)
+			fmt.Print("Initializing the configuration........", currentConfigPath)
 
 			// Even if file can't be saved, we can go continue
 			conf = DefaultConfig
 
 			confErr = app.SaveConfig(currentConfigPath, &conf)
 			if confErr != nil {
-				fmt.Println("\nWARNING:", confErr)
+				fmt.Println("Fail\nWARNING:", confErr)
 			} else {
-				fmt.Println(".......... OK")
+				fmt.Println("OK")
 			}
 
 			// Load default config
