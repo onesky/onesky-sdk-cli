@@ -1,6 +1,7 @@
 package api
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -42,12 +43,21 @@ func (c *client) DoRequest(request *Request, debug bool) (data []byte, err error
 		}
 	}
 
-	httpClient := &http.Client{}
+	httpClient := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+	//httpClient := &http.Client{}
 	if c.Timeout() > 0 {
 		httpClient.Timeout = time.Duration(c.Timeout()) * time.Second
 	}
 
-	response, err := httpClient.Do(request.Request)
+	var response *http.Response
+	response, err = httpClient.Do(request.Request)
+
 	if err == nil {
 
 		if debug {

@@ -59,16 +59,22 @@ func Upload(c *cli.Context) (err error) {
 
 func List(c *cli.Context) (err error) {
 	appContext := c.App.Metadata["context"].(app.Context)
-	api, err := New(appContext)
+
+	var api Api
+	api, err = New(appContext)
+
 	if err == nil {
 
-		request, err := api.CreateRequest("GET", "/files")
+		var request *Request
+		request, err = api.CreateRequest("GET", "/files")
+
 		if err == nil {
 
-			responseString, e := api.Client().DoRequest(request, appContext.Flags().Debug)
+			var responseBytes []byte
+			responseBytes, err = api.Client().DoRequest(request, appContext.Flags().Debug)
 
-			if e == nil && !appContext.Flags().Debug {
-				fmt.Println(string(responseString))
+			if err == nil && !appContext.Flags().Debug {
+				fmt.Println(string(responseBytes))
 			}
 		}
 	}
