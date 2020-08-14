@@ -61,7 +61,7 @@ func main() {
 		ArgsUsage:       "subcommand [subcommand options and args]",
 		Description: "OneSky CLI manages authentication, localization end-to-end workflow," +
 			"and interactions with OneSky APIs. With the OneSky command-line tool, " +
-			"it’s easy to perform many common localization tasks like uploading and downloading string files," +
+			"it's easy to perform many common localization tasks like uploading and downloading string files," +
 			"either from the command line or in scripts and other automation.",
 
 		Commands: []*cli.Command{
@@ -145,10 +145,10 @@ func main() {
 			{
 				Name:  "file",
 				Usage: "Manage files of the app",
-				//Usage:           "onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content=’{“apple-key”: “Apple”}’",
+				//Usage:           "onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content='{"apple-key": "Apple"}'",
 				UsageText: "onesky [global options] file <command> [options]",
 				Description: "Upload content from command-line: \n" +
-					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content=’{“apple-key”: “Apple”}’\n\n" +
+					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content='{"apple-key": "Apple"}'\n\n" +
 					"   Upload content from local file: \n" +
 					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --path=path/to/file/with/valid.ext\n\n" +
 					"	Download file by file id: \n" +
