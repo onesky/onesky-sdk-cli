@@ -148,7 +148,7 @@ func main() {
 				//Usage:           "onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content='{"apple-key": "Apple"}'",
 				UsageText: "onesky [global options] file <command> [options]",
 				Description: "Upload content from command-line: \n" +
-					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content='{"apple-key": "Apple"}'\n\n" +
+					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --content='{\"apple-key\": \"Apple\"}'\n\n" +
 					"   Upload content from local file: \n" +
 					"			onesky file upload --platform-id=web --language-id=en_US --file-name=en_US.json --path=path/to/file/with/valid.ext\n\n" +
 					"	Download file by file id: \n" +
