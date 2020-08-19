@@ -39,13 +39,16 @@ func (a *api) Client() Client {
 
 func (a *api) CreateRequest(method, path string) (r *Request, err error) {
 
-	if err = a.BaseUrl().Join(path); err == nil {
-		r = NewRequest(nil)
-		r.Method = method
-		r.URL = a.BaseUrl().URL
+	url, err := NewUrl(a.BaseUrl().String())
+	if err == nil {
+		if err = url.Join(path); err == nil {
+			r = NewRequest(nil)
+			r.Method = method
+			r.URL = url.URL
 
-		a.markRequest(r)
-		a.authorizeRequest(r)
+			a.markRequest(r)
+			a.authorizeRequest(r)
+		}
 	}
 
 	return r, err
