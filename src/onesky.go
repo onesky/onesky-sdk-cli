@@ -1,15 +1,15 @@
 package main
 
 import (
+	"app"
+	"build"
+	"command/Api"
+	"command/Auth"
+	"command/File"
+	"command/Lang"
 	"fmt"
 	"github.com/urfave/cli"
-	"onesky-sdk-cli/pkg/app"
-	"onesky-sdk-cli/pkg/command/Api"
-	"onesky-sdk-cli/pkg/command/Auth"
-	"onesky-sdk-cli/pkg/command/File"
-	"onesky-sdk-cli/pkg/command/Lang"
-	"onesky-sdk-cli/pkg/help"
-	"onesky-sdk-cli/src/build"
+	"help"
 	"os"
 	"runtime"
 	"time"
@@ -46,7 +46,7 @@ func main() {
 
 	Cli := &cli.App{
 		Name:     "onesky",
-		Version:  "0.0.1",
+		Version:  "0.0.2",
 		Compiled: time.Now(),
 		Authors: []*cli.Author{
 			{

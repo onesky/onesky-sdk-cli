@@ -1,7 +1,7 @@
 package api
 
 import (
-	"onesky-sdk-cli/pkg/app"
+	"app"
 )
 
 type Api interface {

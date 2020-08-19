@@ -1,10 +1,10 @@
 package build
 
 import (
+	"app"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli"
-	"onesky-sdk-cli/pkg/app"
 	"os"
 	"runtime"
 	"time"

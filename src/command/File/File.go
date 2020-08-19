@@ -1,12 +1,12 @@
 package File
 
 import (
+	. "api"
+	"app"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli"
 	"io/ioutil"
-	. "onesky-sdk-cli/pkg/api"
-	"onesky-sdk-cli/pkg/app"
 )
 
 type File interface {

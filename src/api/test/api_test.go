@@ -1,8 +1,8 @@
 package test
 
 import (
-	"onesky-sdk-cli/pkg/api"
-	"onesky-sdk-cli/pkg/app"
+	"api"
+	"app"
 	"reflect"
 	"testing"
 )
