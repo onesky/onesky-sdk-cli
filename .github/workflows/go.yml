@@ -5,6 +5,7 @@ on:
     branches:
     - master
     - dev
+    - new_struct
   pull_request:
     branches:
     - master
@@ -27,23 +28,25 @@ jobs:
 
     - name: Get dependencies
       run: |
-        #go get -v -t -d ./...
-        go get -v -t -d github.com/BurntSushi/toml
-        go get -v -t -d github.com/fatih/structs
-        go get -v -t -d github.com/urfave/cli
+        go get -v -t -d ./...
+        go get -t github.com/creack/pty/...
+        #go get -v -t -d github.com/BurntSushi/toml
+        #go get -v -t -d github.com/fatih/structs
+        #go get -v -t -d github.com/urfave/cli
         #if [ -f Gopkg.toml ]; then
         #    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
         #    dep ensure
         #fi
-        pwd
-        ls
-        ls ..
-        export
-        ls /Users/runner/hostedtoolcache/go/1.14.7/x64
-        whereis go
+        
+    - name: Prepear work dir
+      run: |
+        mkdir src/
+        mv . src/*
         
     - name: Build
-      run: GOPATH="/Users/runner/work/onesky-sdk-cli/onesky-sdk-cli" go build -v ./src/onesky.go
+      env: 
+        GOPATH: "$GITHUB_WORKSPACE"
+      run: go build -v ./src/onesky.go
 
     - name: Test
-      run: go test -v ./pkg/...
+      run: go test -v ./src/api/...
