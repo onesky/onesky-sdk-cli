@@ -39,7 +39,9 @@ jobs:
         ls
         ls ..
         export
-
+        ls /Users/runner/hostedtoolcache/go/1.14.7/x64
+        whereis go
+        
     - name: Build
       run: GOPATH="/Users/runner/work/onesky-sdk-cli/onesky-sdk-cli" go build -v ./src/onesky.go
 
