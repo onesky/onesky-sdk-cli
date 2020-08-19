@@ -35,7 +35,7 @@ jobs:
         go get -v -t -d ./...
         
     - name: Build
-      env: 
+      env:
         GOPATH: "/Users/runner/work/onesky-sdk-cli/onesky-sdk-cli"
       run: go build -v ./src/onesky.go
 
