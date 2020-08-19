@@ -1,15 +1,15 @@
 package main
 
 import (
-	"OneSky-cli/pkg/app"
-	"OneSky-cli/pkg/command/Api"
-	"OneSky-cli/pkg/command/Auth"
-	"OneSky-cli/pkg/command/File"
-	"OneSky-cli/pkg/command/Lang"
-	"OneSky-cli/pkg/help"
-	"OneSky-cli/src/build"
 	"fmt"
 	"github.com/urfave/cli"
+	"onesky-sdk-cli/pkg/app"
+	"onesky-sdk-cli/pkg/command/Api"
+	"onesky-sdk-cli/pkg/command/Auth"
+	"onesky-sdk-cli/pkg/command/File"
+	"onesky-sdk-cli/pkg/command/Lang"
+	"onesky-sdk-cli/pkg/help"
+	"onesky-sdk-cli/src/build"
 	"os"
 	"runtime"
 	"time"

@@ -1,8 +1,8 @@
 package test
 
 import (
-	"OneSky-cli/pkg/api"
-	"OneSky-cli/pkg/app"
+	"onesky-sdk-cli/pkg/api"
+	"onesky-sdk-cli/pkg/app"
 	"reflect"
 	"testing"
 )
@@ -11,16 +11,6 @@ var confDefault = &app.Config{
 	Credentials: app.Credentials{
 		Token: "token string",
 		Type:  "Bearer",
-	},
-	Api: app.Api{
-		Url: "https://management-api.onesky.app/v1",
-	},
-}
-
-var confNoAuthType = &app.Config{
-	Credentials: app.Credentials{
-		Token: "token string",
-		Type:  "",
 	},
 	Api: app.Api{
 		Url: "https://management-api.onesky.app/v1",

@@ -1,7 +1,7 @@
 package build
 
 import (
-	"OneSky-cli/pkg/app"
+	"onesky-sdk-cli/pkg/app"
 )
 
 var DefaultConfig = app.Config{

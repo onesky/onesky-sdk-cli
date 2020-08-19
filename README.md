@@ -6,7 +6,7 @@
 - Get sources from gitHub:  
 `git clone https://github.com/onesky/onesky-sdk-cli.git`
 
-- Go to to source dir:
+- Go to source dir:
 
 `cd OneSky-cli`
 

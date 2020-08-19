@@ -1,10 +1,10 @@
 package Api
 
 import (
-	"OneSky-cli/pkg/app"
 	"fmt"
 	"github.com/fatih/structs"
 	"github.com/urfave/cli"
+	"onesky-sdk-cli/pkg/app"
 )
 
 type Api interface {

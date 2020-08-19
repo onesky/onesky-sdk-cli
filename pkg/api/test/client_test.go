@@ -1,12 +1,12 @@
 package test
 
 import (
-	"OneSky-cli/pkg/api"
-	"OneSky-cli/pkg/app"
 	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"onesky-sdk-cli/pkg/api"
+	"onesky-sdk-cli/pkg/app"
 	"testing"
 	"time"
 )

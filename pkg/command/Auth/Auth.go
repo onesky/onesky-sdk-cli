@@ -1,9 +1,9 @@
 package Auth
 
 import (
-	"OneSky-cli/pkg/app"
 	"fmt"
 	"github.com/urfave/cli"
+	"onesky-sdk-cli/pkg/app"
 )
 
 type Auth interface {

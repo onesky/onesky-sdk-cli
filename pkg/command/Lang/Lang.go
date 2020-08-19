@@ -1,10 +1,10 @@
 package Lang
 
 import (
-	. "OneSky-cli/pkg/api"
-	"OneSky-cli/pkg/app"
 	"fmt"
 	"github.com/urfave/cli"
+	. "onesky-sdk-cli/pkg/api"
+	"onesky-sdk-cli/pkg/app"
 )
 
 type Lang interface {

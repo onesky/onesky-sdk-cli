@@ -1,8 +1,8 @@
 package test
 
 import (
-	"OneSky-cli/pkg/api"
 	"fmt"
+	"onesky-sdk-cli/pkg/api"
 	"testing"
 )
 
