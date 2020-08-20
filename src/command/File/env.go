@@ -1,6 +1,6 @@
 package File
 
-import "github.com/urfave/cli"
+import "github.com/urfave/cli/v2"
 
 var FlagOutput = &cli.StringFlag{
 	Name:     "output",

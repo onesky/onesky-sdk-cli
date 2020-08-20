@@ -1,15 +1,15 @@
 package main
 
 import (
-	"app"
-	"build"
-	"command/Api"
-	"command/Auth"
-	"command/File"
-	"command/Lang"
 	"fmt"
-	"github.com/urfave/cli"
-	"help"
+	"github.com/onesky/onesky-sdk-cli/src/app"
+	"github.com/onesky/onesky-sdk-cli/src/build"
+	"github.com/onesky/onesky-sdk-cli/src/command/Api"
+	"github.com/onesky/onesky-sdk-cli/src/command/Auth"
+	"github.com/onesky/onesky-sdk-cli/src/command/File"
+	"github.com/onesky/onesky-sdk-cli/src/command/Lang"
+	"github.com/onesky/onesky-sdk-cli/src/help"
+	"github.com/urfave/cli/v2"
 	"os"
 	"runtime"
 	"time"
