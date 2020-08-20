@@ -1,9 +1,9 @@
 package test
 
 import (
-	"api"
-	"app"
 	"fmt"
+	"github.com/onesky/onesky-sdk-cli/src/api"
+	"github.com/onesky/onesky-sdk-cli/src/app"
 	"log"
 	"net/http"
 	"net/http/httptest"

@@ -1,10 +1,10 @@
 package Lang
 
 import (
-	. "api"
-	"app"
 	"fmt"
-	"github.com/urfave/cli"
+	. "github.com/onesky/onesky-sdk-cli/src/api"
+	"github.com/onesky/onesky-sdk-cli/src/app"
+	"github.com/urfave/cli/v2"
 )
 
 type Lang interface {
