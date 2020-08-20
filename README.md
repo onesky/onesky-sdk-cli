@@ -1,3 +1,5 @@
+![Go](https://github.com/onesky/onesky-sdk-cli/workflows/Go/badge.svg?branch=dev)
+
 # onesky-sdk-cli
 
 #### Build from sources:
