@@ -36,11 +36,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     steps:
-      - name: Build binaries
-      - run: make build_all
+    - name: Build binaries
+      run: make build_all
 
-      - name: save binaries
-        uses: actions/upload-artifact@v2
-        with:
-          name: save
-          path: bin/**
+    - name: save binaries
+      uses: actions/upload-artifact@v2
+      with:
+        name: save
+        path: bin/**
