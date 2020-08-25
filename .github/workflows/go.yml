@@ -33,7 +33,7 @@ jobs:
     - name: Build binaries
       run: make build
 
-    - name: save binaries
+    - name: Save binaries
       uses: actions/upload-artifact@v2
       with:
         name: onesky-${{ matrix.os }}
