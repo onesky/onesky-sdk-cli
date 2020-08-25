@@ -1,0 +1,38 @@
+on:
+  release:
+    types: [created]
+name: Handle Release
+jobs:
+  generate:
+    name: Create release-artifacts
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-16.04, ubuntu-18.04]
+
+    steps:
+      - name: Set up Go 1.14
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.14
+        id: go
+
+      - name: Checkout the repository
+        uses: actions/checkout@master
+
+      - name: Test
+        run: go test -v ./src/...
+
+      - name: Build binaries
+        run: make build
+
+      - name: Save binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: onesky-${{ matrix.os }}
+          path: bin/onesky
+
+      - name: Upload the artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
