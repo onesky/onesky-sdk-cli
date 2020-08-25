@@ -1,8 +1,10 @@
-// +build darwin
+// +build darwin,!test
 
 package build
 
-import "os"
+import (
+	"os"
+)
 
 //const PS = "/"
 

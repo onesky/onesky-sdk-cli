@@ -1,8 +1,7 @@
-package test
+package api
 
 import (
 	"fmt"
-	"github.com/onesky/onesky-sdk-cli/src/api"
 	"testing"
 )
 
@@ -40,7 +39,7 @@ func TestRequestAuthorization_NewRequestAuthorization(t *testing.T) {
 
 			}(test)
 
-			auth := api.NewRequestAuthorization(test.args.authValue, test.args.authType)
+			auth := NewRequestAuthorization(test.args.authValue, test.args.authType)
 
 			if auth.Value() != test.args.authValue {
 				t.Error(
@@ -90,8 +89,8 @@ func TestRequestAuthorization_NewRequestAuthorizationFromString1(t *testing.T) {
 
 			}()
 
-			authGot := api.NewRequestAuthorizationFromString(test.authString)
-			authExp := api.NewRequestAuthorization(test.args.authValue, test.args.authType)
+			authGot := NewRequestAuthorizationFromString(test.authString)
+			authExp := NewRequestAuthorization(test.args.authValue, test.args.authType)
 
 			if authExp.Value() != authGot.Value() {
 				t.Error(
@@ -129,8 +128,8 @@ func TestRequestAuthorization_NewRequestAuthorizationFromString2(t *testing.T) {
 				return
 			}
 
-			authExp := api.NewRequestAuthorization(test.args.authValue, test.args.authType)
-			authGot := api.NewRequestAuthorizationFromString(authExp.String())
+			authExp := NewRequestAuthorization(test.args.authValue, test.args.authType)
+			authGot := NewRequestAuthorizationFromString(authExp.String())
 
 			if authExp.Value() != authGot.Value() {
 				t.Error(
@@ -176,7 +175,7 @@ func TestRequestAuthorization_SetType(t *testing.T) {
 	for _, test := range testsAuthLocal {
 		t.Run(test.name, func(t *testing.T) {
 
-			auth := api.NewRequestAuthorization(test.args.authValue, test.args.authType)
+			auth := NewRequestAuthorization(test.args.authValue, test.args.authType)
 			auth.SetType(test.authType)
 
 			if auth.Type() != test.authType {

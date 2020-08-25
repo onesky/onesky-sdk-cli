@@ -1,8 +1,7 @@
-package test
+package api
 
 import (
 	"fmt"
-	"github.com/onesky/onesky-sdk-cli/src/api"
 	"testing"
 )
 
@@ -53,7 +52,7 @@ func TestRequestAgent_New(t *testing.T) {
 
 			}(test)
 
-			agent := api.NewRequestAgent(test.args.name, test.args.version, test.args.plugin)
+			agent := NewRequestAgent(test.args.name, test.args.version, test.args.plugin)
 			if agent.Name() != test.args.name {
 				t.Error(
 					"Expected", test.args.name,
@@ -80,7 +79,7 @@ func TestRequestAgent_SetPlugin(t *testing.T) {
 				return
 			}
 
-			agent := api.NewRequestAgent(test.args.name, test.args.version, "")
+			agent := NewRequestAgent(test.args.name, test.args.version, "")
 			agent.SetPlugin(test.args.plugin)
 
 			if agent.Plugin() != test.args.plugin {
@@ -114,7 +113,7 @@ func TestRequestAgent_String(t *testing.T) {
 				return
 			}
 
-			agent := api.NewRequestAgent(test.args.name, test.args.version, test.args.plugin)
+			agent := NewRequestAgent(test.args.name, test.args.version, test.args.plugin)
 
 			if result := agent.String() == test.cmp; result != test.result {
 				t.Error(
@@ -160,7 +159,7 @@ func TestRequestAgent_NewRequestAgentFromString1(t *testing.T) {
 
 			}()
 
-			agent := api.NewRequestAgentFromString(test.arg)
+			agent := NewRequestAgentFromString(test.arg)
 
 			if agent.String() != test.arg {
 				//assert(t, test.arg, agent.String())
@@ -183,8 +182,8 @@ func TestRequestAgent_NewRequestAgentFromString2(t *testing.T) {
 				return
 			}
 
-			agent := api.NewRequestAgent(test.args.name, test.args.version, test.args.plugin)
-			agentFromString := api.NewRequestAgentFromString(agent.String())
+			agent := NewRequestAgent(test.args.name, test.args.version, test.args.plugin)
+			agentFromString := NewRequestAgentFromString(agent.String())
 
 			if agent.Name() != agentFromString.Name() {
 				t.Error(

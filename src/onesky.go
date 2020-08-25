@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/onesky/onesky-sdk-cli/src/app"
 	"github.com/onesky/onesky-sdk-cli/src/build"
 	"github.com/onesky/onesky-sdk-cli/src/command/Api"
 	"github.com/onesky/onesky-sdk-cli/src/command/Auth"
@@ -27,8 +26,8 @@ func init() {
 
 func main() {
 
-	var Config = &app.Config{}
-
+	//var Config = &app.Config{}
+	fmt.Println(os.Args)
 	/////////////////////////////////
 	// CLI-INTERFACE
 	////////////////////////////////
@@ -203,48 +202,7 @@ func main() {
 			},
 
 			// API
-			{
-				Name:      "api",
-				Usage:     "Manage api configuration",
-				UsageText: "onesky [global options] api <command> [options]",
-				Description: "Show information about api configuration: \n" +
-					"			onesky api info\n\n" +
-					"   Set options of api configuration: \n" +
-					"			onesky set --url=\"https://management-api.onesky.app/v1\" --timeout=10\n",
-				HideHelp:        true,
-				HideHelpCommand: true,
-				Subcommands: []*cli.Command{
-					{
-						Name:        "info",
-						Aliases:     []string{"i"},
-						Action:      Api.List,
-						Description: "Show information about api configuration",
-						Usage:       "Show information about api configuration",
-						UsageText:   "onesky api info",
-					},
-					{
-						Name:        "set",
-						Aliases:     []string{"s"},
-						Action:      Api.Set,
-						Description: "Set options of api configuration",
-						Usage:       "Set options of api configuration",
-						UsageText:   "onesky api set",
-
-						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:  "url",
-								Usage: "`URL` - Base url",
-								Value: build.DefaultConfig.Api.Url,
-							},
-							&cli.IntFlag{
-								Name:  "timeout",
-								Usage: "`TIMEOUT` - Request timeout in seconds",
-								Value: build.DefaultConfig.Api.Timeout,
-							},
-						},
-					},
-				},
-			},
+			Api.Command,
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -284,7 +242,11 @@ func main() {
 		Before: func(c *cli.Context) error {
 
 			c.App.Setup()
-			context, err := build.CreateAppContext(c)
+			config, err := build.CreateConfig(c)
+			if err != nil {
+				return err
+			}
+			context, err := build.CreateAppContext(c, &config)
 			if err != nil {
 				return err
 			}
@@ -296,7 +258,7 @@ func main() {
 
 			c.App.Metadata["context"] = context
 
-			*Config = *context.Config()
+			//*Config = *context.Config()
 
 			return nil
 		},

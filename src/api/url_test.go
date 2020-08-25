@@ -1,8 +1,7 @@
-package test
+package api
 
 import (
 	"fmt"
-	"github.com/onesky/onesky-sdk-cli/src/api"
 	"testing"
 )
 
@@ -22,7 +21,7 @@ func TestNewUrl(t *testing.T) {
 
 	for i := range tests {
 
-		url, err := api.NewUrl(fmt.Sprint(tests[i].given))
+		url, err := NewUrl(fmt.Sprint(tests[i].given))
 
 		if tests[i].err == true && err == nil {
 			t.Error(
@@ -58,7 +57,7 @@ func TestUrl_Join(t *testing.T) {
 	}
 
 	for i := range tests {
-		url, _ := api.NewUrl(baseUrl)
+		url, _ := NewUrl(baseUrl)
 		err := url.Join(fmt.Sprint(tests[i].given))
 
 		if !tests[i].err && err != nil {

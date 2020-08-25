@@ -10,31 +10,29 @@ import (
 	"time"
 )
 
-func CreateAppContext(c *cli.Context) (context app.Context, err error) {
+func CreateAppContext(ctx *cli.Context, conf *app.Config) (context app.Context, err error) {
 
-	appContext := app.NewContext(nil)
+	appContext := app.NewContext(conf)
 	*appContext.Build() = app.Build{
 		BuildId:        time.Now().Format("20060102-1504"),
 		BuildInfo:      runtime.GOOS + "(" + runtime.GOARCH + ")",
 		ConfigPath:     DefaultConfigPath,
 		ProductName:    ProductName,
-		ProductVersion: c.App.Version,
+		ProductVersion: ctx.App.Version,
 	}
 	*(appContext.Flags()) = app.Flags{
-		ConfigPath: c.String("config-file"),
-		AuthString: c.String("access-token"),
-		AuthType:   c.String("access-type"),
-		Debug:      c.Bool("debug"),
+		ConfigPath: ctx.String("config-file"),
+		AuthString: ctx.String("access-token"),
+		AuthType:   ctx.String("access-type"),
+		Debug:      ctx.Bool("debug"),
 	}
 
-	*(appContext.Config()), err = buildConfig(c)
-
-	*(appContext.Auth()) = buildAuth(c, appContext.Config())
+	*(appContext.Auth()) = buildAuth(ctx, appContext.Config())
 
 	return appContext, err
 }
 
-func buildConfig(c *cli.Context) (conf app.Config, err error) {
+func CreateConfig(c *cli.Context) (conf app.Config, err error) {
 	//var Config *config.Config
 
 	// TRY TO LOAD ALTERNATIVE CONFIG

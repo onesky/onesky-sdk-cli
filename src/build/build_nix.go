@@ -1,4 +1,4 @@
-// +build linux
+// +build linux,!test
 
 package build
 

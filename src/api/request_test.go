@@ -1,8 +1,7 @@
-package test
+package api
 
 import (
 	"fmt"
-	"github.com/onesky/onesky-sdk-cli/src/api"
 	"io"
 	"net/http"
 	"net/url"
@@ -12,8 +11,8 @@ import (
 
 func TestApi_NewRequest(t *testing.T) {
 
-	params := api.RequestParams{"param1": "value1", "param2": "value2"}
-	request := api.NewRequest(params)
+	params := RequestParams{"param1": "value1", "param2": "value2"}
+	request := NewRequest(params)
 
 	if request.Params() == nil {
 		t.Error("Uninitialized parameters")
@@ -53,9 +52,9 @@ func TestApi_NewRequest(t *testing.T) {
 
 func TestApi_WrapHttpRequest(t *testing.T) {
 	httpReq := &http.Request{}
-	params := api.RequestParams{"param1": "value1", "param2": "value2"}
+	params := RequestParams{"param1": "value1", "param2": "value2"}
 
-	request := api.WrapHttpRequest(httpReq, params)
+	request := WrapHttpRequest(httpReq, params)
 
 	if request.Params() == nil {
 		t.Error("Uninitialized parameters")
@@ -72,7 +71,7 @@ func TestApi_WrapHttpRequest(t *testing.T) {
 		t.Error("Uninitialized header")
 	}
 
-	accExpected := api.TypeJson
+	accExpected := TypeJson
 	if got := request.Header.Get("Accept"); got != accExpected {
 		t.Error(
 			"\nExpected (accept):", accExpected,
@@ -80,7 +79,7 @@ func TestApi_WrapHttpRequest(t *testing.T) {
 		)
 	}
 
-	conExpected := api.TypeJson
+	conExpected := TypeJson
 	if got := request.Header.Get("Content-Type"); got != conExpected {
 		t.Error(
 			"\nExpected (Content-Type):", conExpected,
@@ -106,7 +105,7 @@ func TestRequest_Param(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			request := api.NewRequest(nil)
+			request := NewRequest(nil)
 			request.SetParam(tt.fields.key, tt.fields.value)
 
 			want := tt.exp.value
@@ -123,24 +122,24 @@ func TestRequest_Param(t *testing.T) {
 
 func TestRequest_Params(t *testing.T) {
 	type fields struct {
-		p api.RequestParams
+		p RequestParams
 	}
 	tests := []struct {
 		name   string
 		fields fields
 		err    bool
 	}{
-		{"Empty", fields{api.RequestParams{}}, false},
-		{"OK", fields{api.RequestParams{"some": "param"}}, false},
+		{"Empty", fields{RequestParams{}}, false},
+		{"OK", fields{RequestParams{"some": "param"}}, false},
 		{"ERR", fields{nil}, false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			request := api.NewRequest(nil)
+			request := NewRequest(nil)
 			request.SetParams(tt.fields.p)
 
-			wantType := reflect.ValueOf(api.RequestParams{}).Type()
+			wantType := reflect.ValueOf(RequestParams{}).Type()
 			gotType := reflect.ValueOf(request.Params()).Type()
 			if wantType != gotType {
 				t.Error(

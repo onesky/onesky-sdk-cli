@@ -1,7 +1,6 @@
-package test
+package api
 
 import (
-	"github.com/onesky/onesky-sdk-cli/src/api"
 	"github.com/onesky/onesky-sdk-cli/src/app"
 	"reflect"
 	"testing"
@@ -38,7 +37,7 @@ var confInvalidUrl = &app.Config{
 }
 
 var defaultCtx = app.NewContext(confDefault)
-var defaultApi, _ = api.New(defaultCtx)
+var defaultApi, _ = New(defaultCtx)
 
 func Test_api_New(t *testing.T) {
 	type args struct {
@@ -47,14 +46,14 @@ func Test_api_New(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want api.Api
+		want Api
 	}{
 		{name: "OK", args: args{defaultCtx}, want: defaultApi},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := api.New(defaultCtx)
+			got, _ := New(defaultCtx)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewContext() = %v, want %v", got, tt.want)
 			}
@@ -71,7 +70,7 @@ func Test_api_Client(t *testing.T) {
 		t.Errorf("Expected 'singletone', but got new instance")
 	}
 
-	if _, ok := interface{}(client1).(api.Client); !ok {
+	if _, ok := interface{}(client1).(Client); !ok {
 		t.Errorf("Expected 'Client' interface")
 	}
 }
@@ -95,7 +94,7 @@ func Test_api_CreateRequest(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			newApi, e := api.New(app.NewContext(&tt.conf))
+			newApi, e := New(app.NewContext(&tt.conf))
 			if e != nil {
 				if tt.pass {
 					t.Error(e.Error())
@@ -115,7 +114,7 @@ func Test_api_CreateRequest(t *testing.T) {
 			}
 
 			got := reflect.ValueOf(r).Type()
-			want := reflect.ValueOf(&api.Request{}).Type()
+			want := reflect.ValueOf(&Request{}).Type()
 			if got != want {
 				t.Error(
 					"\nExpected", want,
@@ -123,7 +122,7 @@ func Test_api_CreateRequest(t *testing.T) {
 				)
 			}
 
-			urlWant, err := api.NewUrl(confDefault.Api.Url)
+			urlWant, err := NewUrl(confDefault.Api.Url)
 			if err != nil {
 				t.Error("Unexpected error:", err.Error())
 
@@ -155,11 +154,11 @@ func Test_api_markRequest(t *testing.T) {
 	ctx.Build().ProductVersion = version
 	ctx.Build().ProductName = name
 
-	newApi, err := api.New(ctx)
+	newApi, err := New(ctx)
 	if err == nil {
 		r, err := newApi.CreateRequest("GET", "/test")
 		if err == nil {
-			ua := api.NewRequestAgent(name, version, "")
+			ua := NewRequestAgent(name, version, "")
 
 			if r.Agent().String() != ua.String() {
 				t.Error(
@@ -196,22 +195,22 @@ func Test_api_authorizeRequest(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		exp  api.RequestAuthorization
+		exp  RequestAuthorization
 		pass bool
 	}{
-		{name: "OK", args: args{app.NewContext(confDefault)}, exp: api.NewRequestAuthorization(confDefault.Credentials.Token, confDefault.Credentials.Type), pass: true},
+		{name: "OK", args: args{app.NewContext(confDefault)}, exp: NewRequestAuthorization(confDefault.Credentials.Token, confDefault.Credentials.Type), pass: true},
 		{name: "No_auth", args: args{app.NewContext(confNoAuth)}, exp: nil, pass: false},
 		{name: "Global", args: args{
 			setAuth(app.NewContext(confDefault), app.Auth{Token: "someToken", Type: "Basic"}),
-		}, exp: api.NewRequestAuthorization("someToken", "Basic"), pass: true},
+		}, exp: NewRequestAuthorization("someToken", "Basic"), pass: true},
 		{name: "Override", args: args{
 			setAuth(app.NewContext(confDefault), app.Auth{Token: "overrideToken", Type: "Basic"}),
-		}, exp: api.NewRequestAuthorization("overrideToken", "Basic"), pass: true},
+		}, exp: NewRequestAuthorization("overrideToken", "Basic"), pass: true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			newApi, err := api.New(tt.args.ctx)
+			newApi, err := New(tt.args.ctx)
 
 			if err == nil {
 				r, _ := newApi.CreateRequest("GET", "/test")

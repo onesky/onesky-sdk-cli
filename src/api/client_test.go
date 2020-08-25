@@ -1,8 +1,7 @@
-package test
+package api
 
 import (
 	"fmt"
-	"github.com/onesky/onesky-sdk-cli/src/api"
 	"github.com/onesky/onesky-sdk-cli/src/app"
 	"log"
 	"net/http"
@@ -45,11 +44,11 @@ func handlers() http.Handler {
 
 func TestClient(t *testing.T) {
 
-	client := api.NewClient()
+	client := NewClient()
 
-	if client.Timeout() != api.ClientDefaultTimeout {
+	if client.Timeout() != ClientDefaultTimeout {
 		t.Error(
-			"Expected", api.ClientDefaultTimeout,
+			"Expected", ClientDefaultTimeout,
 			"\ngot", client.Timeout(),
 		)
 	}
@@ -79,10 +78,10 @@ func TestClient_Timeout(t *testing.T) {
 		},
 	}
 
-	client := api.NewClient()
+	client := NewClient()
 
 	apiContext := app.NewContext(conf)
-	apiInstance, err := api.New(apiContext)
+	apiInstance, err := New(apiContext)
 	if err != nil {
 		t.Error("Unexpected error:", err)
 	}
@@ -126,7 +125,7 @@ func TestClient_TimeoutPanic(t *testing.T) {
 		}
 	}()
 
-	client := api.NewClient()
+	client := NewClient()
 	client.SetTimeout(0)
 }
 
@@ -154,7 +153,7 @@ func TestClient_Response(t *testing.T) {
 	}
 
 	apiContext := app.NewContext(conf)
-	apiInstance, err := api.New(apiContext)
+	apiInstance, err := New(apiContext)
 	if err != nil {
 		t.Error("Unexpected error:", err)
 	}
