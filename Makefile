@@ -110,7 +110,7 @@ test:
 	@echo "###############################"
 
 	@echo " ==> Testing..."
-	go test -v ./...
+	go test -v -tags=test ./...
 
 	@echo " *** Build is OK ***"
 	@echo ""
