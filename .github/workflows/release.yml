@@ -1,8 +1,8 @@
-name: Handle Release
+name: Release
 
 on:
   release:
-    types: [published, created, edited]
+    types: [created]
 
 jobs:
   generate:
@@ -11,6 +11,20 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-16.04, ubuntu-18.04]
+        - os: ubuntu-20.04
+          artifact_name: onesky-ubuntu20
+
+        - os: ubuntu-18.04
+          artifact_name: onesky-ubuntu18
+
+        - os: ubuntu-16.04
+          artifact_name: onesky-ubuntu16
+
+        - os: macos-latest
+          artifact_name: onesky-macos
+
+        - os: windows-latest
+          artifact_name: onesky-win.exe
 
     steps:
       - name: Set up Go 1.14
@@ -31,10 +45,15 @@ jobs:
       - name: Save binaries
         uses: actions/upload-artifact@v2
         with:
-          name: onesky-${{ matrix.os }}
+          name: ${{ matrix.artifact_name }}
           path: bin/onesky
 
       - name: Upload the artifacts
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: svenstaro/upload-release-action@v2
+          with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: target/release/${{ matrix.artifact_name }}
+            asset_name: ${{ matrix.artifact_name }}
+            tag: ${{ github.ref }}
+            overwrite: true
+
