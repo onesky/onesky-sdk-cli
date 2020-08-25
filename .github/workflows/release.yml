@@ -1,4 +1,3 @@
-# need to edit!
 on:
   release:
     types: [created]
