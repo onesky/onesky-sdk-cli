@@ -6,11 +6,11 @@ on:
 
 jobs:
   generate:
-    name: Create release-artifacts
+    name: Publish for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        - include:
+        include:
           - os: ubuntu-20.04
             artifact_name: onesky-ubuntu20
 
