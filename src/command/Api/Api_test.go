@@ -6,6 +6,7 @@ import (
 	"github.com/onesky/onesky-sdk-cli/src/command/test"
 	"github.com/urfave/cli/v2"
 	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -23,16 +24,17 @@ func TestApi_List(t *testing.T) {
 	})
 
 	got := string(gotBytes)
-	var expected = ""
+	var expected map[string]interface{}
 	for k, v := range structs.Map(appCtx.Config().Api) {
-		expected += fmt.Sprintf("%s: %v\n", k, v)
-	}
+		t1 := strings.Index(got, k)
+		t2 := strings.Index(got, fmt.Sprint(v))
 
-	if expected != got {
-		t.Error(
-			fmt.Sprintf("\nGot: '%s'\n", got),
-			fmt.Sprintf("Expected: '%s'\n", expected),
-		)
+		if t1 < 0 || t2 < 0 {
+			t.Error(
+				fmt.Sprintf("\nGot: '%s'\n", got),
+				fmt.Sprintf("Expected: '%s'\n", expected),
+			)
+		}
 	}
 }
 
