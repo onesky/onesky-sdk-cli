@@ -6,6 +6,5 @@ import "os"
 
 const PS = "/"
 
-//const DefaultConfigPath = "$HOME/.config/onesky.toml"
-var DefaultConfigPath = os.Getenv("HOME") + "/.config/onesky.toml"
+var DefaultConfigPath = os.Getenv("HOME") + PS + ".config" + PS + "onesky.toml"
 var ProductName = "onesky-cli-linux"

@@ -1,70 +1,22 @@
 package Api
 
 import (
-	"flag"
 	"fmt"
 	"github.com/fatih/structs"
-	"github.com/onesky/onesky-sdk-cli/src/app"
-	"github.com/onesky/onesky-sdk-cli/src/build"
+	"github.com/onesky/onesky-sdk-cli/src/command/test"
 	"github.com/urfave/cli/v2"
-	"io/ioutil"
-	"log"
-	"os"
 	"strconv"
 	"testing"
 )
 
-func createTestAppContext(ctx *cli.Context) app.Context {
-
-	config, err := build.CreateConfig(ctx)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	appCtx, err := build.CreateAppContext(ctx, &config)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return appCtx
-}
-
-func createTestCliContext() *cli.Context {
-	ctx := cli.NewContext(
-		cli.NewApp(),
-		flag.NewFlagSet("testSet", flag.ContinueOnError),
-		nil,
-	)
-	ctx.App.Setup()
-	return ctx
-}
-
-func cap(f func()) []byte {
-	backup := os.Stdout
-	r, w, _ := os.Pipe()
-	defer func() {
-		_ = r.Close()
-		_ = w.Close()
-	}()
-	os.Stdout = w
-
-	f()
-
-	_ = w.Close()
-	out, _ := ioutil.ReadAll(r)
-	os.Stdout = backup
-
-	return out
-}
-
 func TestApi_List(t *testing.T) {
 
-	cliCtx := createTestCliContext()
-	appCtx := createTestAppContext(cliCtx)
+	cliCtx := test.CreateTestCliContext()
+	appCtx := test.CreateTestAppContext(cliCtx)
 
 	cliCtx.App.Metadata["context"] = appCtx
 
-	gotBytes := cap(func() {
+	gotBytes := test.Cap(func() {
 		if err := List(cliCtx); err != nil {
 			t.Error("Unexpected error:", err)
 		}
@@ -85,8 +37,8 @@ func TestApi_List(t *testing.T) {
 }
 
 func TestApi_Set(t *testing.T) {
-	cliCtx := createTestCliContext()
-	appCtx := createTestAppContext(cliCtx)
+	cliCtx := test.CreateTestCliContext()
+	appCtx := test.CreateTestAppContext(cliCtx)
 
 	cliCtx.App.Metadata["context"] = appCtx
 

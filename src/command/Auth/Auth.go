@@ -6,6 +6,12 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+const ErrNoToken = "Token not found"
+const ErrUpdate = "Unable to update config: %s"
+const MsgNewToken = "New token: (%s) %s"
+const MsgGetToken = "Access token: (%s) %s"
+const MsgRevokeToken = "Access token was revoked"
+
 type Auth interface {
 	Login(*cli.Context) error
 	List(*cli.Context) error
@@ -20,9 +26,11 @@ func Login(c *cli.Context) (e error) {
 
 	e = a.Config().Update()
 	if e == nil {
-		fmt.Printf("NewContext token: (%s) %s\n", a.Config().Credentials.Type, a.Config().Credentials.Token)
+		fmt.Printf(MsgNewToken, a.Config().Credentials.Type, a.Config().Credentials.Token)
+		fmt.Println()
 	} else {
-		fmt.Println("Unable to update config: ", e.Error())
+		fmt.Printf(ErrUpdate, e.Error())
+		fmt.Println()
 	}
 	return e
 }
@@ -31,9 +39,10 @@ func List(c *cli.Context) (e error) {
 	a := c.App.Metadata["context"].(app.Context)
 
 	if tok := a.Config().Credentials.Token; tok != "" {
-		fmt.Printf("Access token: (%s) %s\n", a.Config().Credentials.Type, a.Config().Credentials.Token)
+		fmt.Printf(MsgGetToken, a.Config().Credentials.Type, a.Config().Credentials.Token)
+		fmt.Println()
 	} else {
-		fmt.Println("Token not found")
+		fmt.Println(ErrNoToken)
 	}
 	return e
 
@@ -46,9 +55,11 @@ func Revoke(c *cli.Context) (e error) {
 
 	e = a.Config().Update()
 	if e == nil {
-		fmt.Println("Access token was revoked")
+		fmt.Print(MsgRevokeToken)
+		fmt.Println()
 	} else {
-		fmt.Println("Unable to update config: ", e.Error())
+		fmt.Printf(ErrUpdate, e.Error())
+		fmt.Println()
 	}
 
 	return e

@@ -25,11 +25,13 @@ type Api struct {
 	Timeout int
 }
 
+const ErrConfigNoSource = "unknown source"
+
 func (o *Config) Update() error {
 	if o.source != "" {
 		return SaveConfig(o.source, o)
 	}
-	return errors.New("unknown source")
+	return errors.New(ErrConfigNoSource)
 }
 
 func (o *Config) Source() string {
