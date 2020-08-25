@@ -49,10 +49,10 @@ jobs:
 
       - name: Upload the artifacts
         uses: svenstaro/upload-release-action@v2
-          with:
-            repo_token: ${{ secrets.GITHUB_TOKEN }}
-            file: target/release/${{ matrix.artifact_name }}
-            asset_name: ${{ matrix.artifact_name }}
-            tag: ${{ github.ref }}
-            overwrite: true
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: target/release/${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.artifact_name }}
+          tag: ${{ github.ref }}
+          overwrite: true
 
