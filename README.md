@@ -2,6 +2,10 @@
 
 # onesky-sdk-cli
 
+The OneSky command-line interface is a Go application that lets you access OneSky from the command line. You can use this tool to perform many common platform tasks either from the command line or in scripts and other automations. For example:
+- List all languages or files used in your app
+- Importing and exporting files
+
 #### Build from sources:
 
 **Required: "go 1.14" (https://golang.org/dl/)**
