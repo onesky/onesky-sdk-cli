@@ -4,39 +4,16 @@
 
 The OneSky command-line interface is a Go application that lets you access OneSky from the command line. You can use this tool to perform many common platform tasks either from the command line or in scripts and other automations.
 
-#### Build from sources:
+## Installation:
 
-**Required: "go 1.14" (https://golang.org/dl/)**
-- Get sources from gitHub:  
-`git clone https://github.com/onesky/onesky-sdk-cli.git`
+For installation instructions, please see:
+https://developers.onesky.app/docs/command-line-interface
 
-- Go to source dir:
+## Help and Support
+Run the "onesky help" command for a list of the built-in gsutil help topics. You can also use the "--help" flag for more information about specfic commands.
 
-`cd OneSky-cli`
+For a quick guide on getting starting, please see our CLI cheet sheet:
+https://developers.onesky.app/docs/cli-cheat-sheet#file
 
-- Get dependencies: 
-
-`go get`
-
-- Use `make`:
-
-`make setup`
-
-- Or run build command for specific platform:
-
-`GOOS=<GOOS> GOARCH=<GOARCH> go build -o bin/onesky src/onesky.go`
-
-GOOS is one of: windows, linux, darwin, android or freebsd
-GOARCH is one of: amd64, 386, arm, arm64
-
-- Change permissions:
-
-`chmod +x bin/onesky`
-
-- Run:
-
-`./bin/onesky`
-
-- Add to PATH(optional):
-
-`export PATH=$PATH:$(pwd)"/bin/onesky"`
+You can find more info on the OneSky CLI and other components of the OneSky SDK at our Developers Hub: 
+https://developers.onesky.app/docs/getting-started-welcome
