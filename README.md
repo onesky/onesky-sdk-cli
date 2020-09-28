@@ -4,7 +4,7 @@
 
 The OneSky command-line interface is a Go application that lets you access OneSky from the command line. You can use this tool to perform many common platform tasks either from the command line or in scripts and other automations.
 
-## Installation:
+## Installation
 
 For installation instructions, please see:
 
