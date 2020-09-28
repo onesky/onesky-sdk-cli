@@ -15,5 +15,5 @@ Run the "onesky help" command for a list of the built-in help topics. You can al
 For a quick guide on getting starting, please see our CLI cheet sheet:
 https://developers.onesky.app/docs/cli-cheat-sheet#file
 
-You can find more info on the OneSky CLI and other components of the OneSky SDK at our Developers Hub: 
+You can find more info on the OneSky CLI and other components of the OneSky SDK at our Developers Hub:
 https://developers.onesky.app/docs/getting-started-welcome
