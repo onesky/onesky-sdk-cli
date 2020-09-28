@@ -17,6 +17,6 @@ For a quick guide on getting started, please see our CLI cheet sheet:
 
 https://developers.onesky.app/docs/cli-cheat-sheet
 
-You can find more info on the OneSky CLI and other components of the OneSky SDK at our Developer Hub:
+Our Developer Hub has all information on the OneSky CLI and other components of the OneSky SDK:
 
 https://developers.onesky.app/docs/getting-started-welcome
