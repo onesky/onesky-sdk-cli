@@ -13,7 +13,7 @@ https://developers.onesky.app/docs/command-line-interface
 ## Help and Support
 Run the "onesky help" command for a list of the built-in help topics. You can also use the "--help" flag for more information about specfic commands.
 
-For a quick guide on getting starting, please see our CLI cheet sheet:
+For a quick guide on getting started, please see our CLI cheet sheet:
 
 https://developers.onesky.app/docs/cli-cheat-sheet#file
 
