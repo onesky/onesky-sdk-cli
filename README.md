@@ -10,6 +10,12 @@ For installation instructions, please see:
 
 https://developers.onesky.app/docs/command-line-interface
 
+## Contributions and Development
+
+To contribute to this project, please see:
+
+https://github.com/onesky/onesky-sdk-cli/blob/master/CONTRIBUTING.md
+
 ## Help and Support
 Run the "onesky help" command for a list of the built-in help topics. You can also use the "--help" flag for more information about specfic commands.
 
