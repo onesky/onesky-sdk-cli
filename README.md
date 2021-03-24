@@ -1,16 +1,22 @@
+# OneSky Command Line Tool
+
 ![Go](https://github.com/onesky/onesky-sdk-cli/workflows/Go/badge.svg?branch=dev)
 
-# onesky-sdk-cli
+<img src="https://github.com/onesky/onesky-community/blob/screenshots/screenshots/onesky-saas.png?raw=true" height="65" />
 
-The OneSky command-line interface is a Go application that lets you access OneSky from the command line. You can use this tool to perform many common platform tasks either from the command line or in scripts and other automations.
+----
 
-## Installation
+The OneSky Command Line Tool is a Go application that lets you access OneSky from the command line. You can use this tool to perform many common platform tasks either from the command line or in scripts and other automations.
+
+----
+
+## To start using OneSky Command Line Tool
 
 For installation instructions, please see:
 
 https://developers.onesky.app/docs/command-line-interface
 
-## Contributions and Development
+## To start developing OneSky Command Line Tool
 
 To contribute to this project, please see:
 
