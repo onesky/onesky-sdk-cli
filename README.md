@@ -2,7 +2,7 @@
 
 ![Go](https://github.com/onesky/onesky-sdk-cli/workflows/Go/badge.svg?branch=dev)
 
-<img src="https://github.com/onesky/onesky-community/blob/screenshots/screenshots/onesky-saas.png?raw=true" height="65" />
+<img src="https://github.com/onesky/community/blob/main/logo/logo.png?raw=true" height="65" />
 
 ----
 
