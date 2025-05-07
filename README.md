@@ -14,7 +14,7 @@ The OneSky Command Line Tool is a Go application that lets you access OneSky fro
 
 For installation instructions, please see:
 
-https://developers.onesky.ai/docs/command-line-interface
+[OneSky.AI CLI](https://developers.onesky.ai/docs/command-line-interface)
 
 ## To start developing OneSky Command Line Tool
 
@@ -23,10 +23,6 @@ The [community repository](https://github.com/onesky/community) hosts all inform
 ## Help and Support
 Run the "onesky help" command for a list of the built-in help topics. You can also use the "--help" flag for more information about specfic commands.
 
-For a quick guide on getting started, please see our CLI cheet sheet:
+For a quick guide on getting started, please see our [CLI cheet sheet](https://developers.onesky.ai/docs/cli-cheat-sheet):
 
-https://developers.onesky.ai/docs/cli-cheat-sheet
-
-Our Developer Hub has all information on the OneSky CLI and other components of the OneSky SDK:
-
-https://developers.onesky.ai/docs/getting-started-welcome
+Our [Developer Hub](https://developers.onesky.ai/docs/getting-started-welcome) has all information on the OneSky.AI CLI and other components of the OneSky.AI SDK.
